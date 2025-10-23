@@ -3,7 +3,9 @@
  * cron: 0 8 * * *
  */
 const axios = require('axios');
-const { logger } = require('./logger.js');
+const { Logger } = require('./logger.js');
+
+const logger = new Logger('机场签到');
 
 const loginPath = '/auth/login';
 const checkPath = '/user/checkin';

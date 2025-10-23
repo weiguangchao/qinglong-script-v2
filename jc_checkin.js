@@ -6,52 +6,42 @@ const axios = require('axios');
 const { Logger } = require('./logger.js');
 
 const logger = new Logger('机场签到');
+const cookie = '';
 
 const loginPath = '/auth/login';
 const checkPath = '/user/checkin';
 
-function login(baseURL, email, passwd) {
-  return axios(baseURL + loginPath, {
+async function login(baseURL, email, passwd) {
+  logger.log(`${baseURL} ${email} 正在登录`);
+  const response = await axios(baseURL + loginPath, {
     method: 'POST',
     params: { email, passwd },
-  })
-    .then((response) => {
-      let data = response.data;
-      if (data.ret != 1) {
-        throw {
-          message: data.msg,
-        };
-      }
+  });
 
-      let cookie = response.headers['set-cookie'];
-      return cookie;
-    })
-    .catch((e) => {
-      return '登录失败，原因：' + e.message;
-    });
+  const data = response.data;
+  if (data.ret != 1) {
+    throw data.msg;
+  }
+
+  cookie = response.headers['set-cookie'];
+  logger.log('cookie: ' + cookie);
 }
 
-function check(baseURL, cookie) {
-  return axios(baseURL + checkPath, {
+async function check(baseURL) {
+  logger.log(`${baseURL} 正在签到`);
+  const response = await axios(baseURL + checkPath, {
     method: 'POST',
     headers: {
       Cookie: cookie,
     },
-  })
-    .then((response) => {
-      let data = response.data;
-      if (data.ret != 1) {
-        throw {
-          message: data.msg,
-        };
-      }
+  });
 
-      // sendMessage.push(data.msg);
-      QLAPI.notify('机场签到', data.msg);
-    })
-    .catch((e) => {
-      return '签到失败, 原因：' + e.message;
-    });
+  const data = response.data;
+  if (data.ret != 1) {
+    throw data.msg;
+  }
+
+  logger.logAll('签到成功: ' + data.msg);
 }
 
 function getEnv() {
@@ -77,18 +67,17 @@ function getEnv() {
 }
 
 !(async () => {
-  const jcckArr = getEnv();
+  try {
+    const jcckArr = getEnv();
 
-  for await (jcck of jcckArr) {
-    jc = jcck.split(';;;');
-    let loginResult = await login(jc[0], jc[1], jc[2]);
-    if (typeof loginResult == 'string') {
-      logger.logAll(`机场地址：${jc[0]}, 邮箱：${jc[1]}，${loginResult}\n`);
-      continue;
+    for (const jcck of jcckArr) {
+      const jc = jcck.split(';;;');
+      await login(jc[0], jc[1], jc[2]);
+      await check(jc[0]);
     }
-
-    let checkResult = await check(jc[0], loginResult);
-    logger.logAll(`机场地址：${jc[0]}, 邮箱：${jc[1]}，${checkResult}\n`);
+  } catch (error) {
+    logger.logAll(error);
+  } finally {
     logger.notify();
   }
 })();

@@ -20,7 +20,7 @@ async function login(baseURL, email, passwd) {
 
   const data = response.data;
   if (data.ret != 1) {
-    throw data.msg;
+    throw new Error(data.msg);
   }
 
   cookie = response.headers['set-cookie'];
@@ -38,7 +38,7 @@ async function check(baseURL) {
 
   const data = response.data;
   if (data.ret != 1) {
-    throw data.msg;
+    throw new Error(data.msg);
   }
 
   logger.logAll('签到成功: ' + data.msg);
@@ -76,7 +76,7 @@ function getEnv() {
       await check(jc[0]);
     }
   } catch (error) {
-    logger.logAll(error);
+    logger.logAll(error.message);
   } finally {
     logger.notify();
   }

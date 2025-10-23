@@ -1,5 +1,5 @@
 /**
- * new Env("日志工具类")
+ * new Env("工具类")
  * cron: 1 1 1 1 *
  */
 class Logger {

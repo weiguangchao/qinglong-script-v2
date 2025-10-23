@@ -6,7 +6,7 @@
  *
  */
 const axios = require('axios');
-const { Logger, getEnv } = require('./util.js');
+const { Logger, getEnv, sleep } = require('./util.js');
 
 const logger = new Logger('机场签到');
 let cookie = '';

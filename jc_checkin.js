@@ -43,7 +43,8 @@ function check(baseURL, cookie) {
         };
       }
 
-      sendMessage.push(data.msg);
+      // sendMessage.push(data.msg);
+      QLAPI.notify('机场签到', data.msg);
     })
     .catch((e) => {
       return '签到失败, 原因：' + e.message;

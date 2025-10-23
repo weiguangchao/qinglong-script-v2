@@ -3,6 +3,7 @@
  * cron: 0 8 * * *
  */
 const axios = require('axios');
+const { logger } = require('./logger.js');
 
 const loginPath = '/auth/login';
 const checkPath = '/user/checkin';
@@ -80,11 +81,12 @@ function getEnv() {
     jc = jcck.split(';;;');
     let loginResult = await login(jc[0], jc[1], jc[2]);
     if (typeof loginResult == 'string') {
-      console.log(`机场地址：${jc[0]}, 邮箱：${jc[1]}，${loginResult}\n`);
+      logger.logAll(`机场地址：${jc[0]}, 邮箱：${jc[1]}，${loginResult}\n`);
       continue;
     }
 
     let checkResult = await check(jc[0], loginResult);
-    console.log(`机场地址：${jc[0]}, 邮箱：${jc[1]}，${checkResult}\n`);
+    logger.logAll(`机场地址：${jc[0]}, 邮箱：${jc[1]}，${checkResult}\n`);
+    logger.notify();
   }
 })();

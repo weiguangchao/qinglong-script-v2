@@ -60,4 +60,8 @@ function getEnv(envName) {
   return ckArr;
 }
 
-export { Logger, getEnv };
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export { Logger, getEnv, sleep };

@@ -56,6 +56,7 @@ function getEnv(envName) {
     ckArr.push(ck);
   }
 
+  console.log(`ck数量: ${ckArr.length}`);
   return ckArr;
 }
 

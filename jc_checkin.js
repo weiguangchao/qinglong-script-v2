@@ -2,7 +2,7 @@
  * new Env("机场签到")
  * cron: 0 8 * * *
  *
- * 机场地址;;;邮箱;;;密码
+ * ck格式: 机场地址;;;邮箱;;;密码
  *
  */
 const axios = require('axios');

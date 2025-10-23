@@ -48,17 +48,19 @@ async function check(baseURL) {
 }
 
 !(async () => {
-  try {
-    const jcckArr = getEnv('jcck');
+  const jcckArr = getEnv('jcck');
 
-    for (const jcck of jcckArr) {
+  for (const jcck of jcckArr) {
+    try {
       const jc = jcck.split(';;;');
       await login(jc[0], jc[1], jc[2]);
+      await sleep(1000);
+
       await check(jc[0]);
+      await sleep(1000);
+    } catch (error) {
+      logger.logAll(error.message);
     }
-  } catch (error) {
-    logger.logAll(error.message);
-  } finally {
-    logger.notify();
   }
+  logger.notify();
 })();

@@ -37,4 +37,26 @@ class Logger {
   }
 }
 
-export { Logger };
+function getEnv(envName) {
+  let ckArr = [];
+  let ck = process.env[envName];
+
+  if (!ck) {
+    console.log('ck未定义!!!');
+    process.exit(0);
+  }
+
+  if (Array.isArray(ck)) {
+    ckArr = ck;
+  } else if (ck.indexOf('&') > -1) {
+    ckArr = ck.split('&');
+  } else if (ck.indexOf('\n') > -1) {
+    ckArr = ck.split('\n');
+  } else {
+    ckArr.push(ck);
+  }
+
+  return ckArr;
+}
+
+export { Logger, getEnv };

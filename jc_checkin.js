@@ -1,11 +1,7 @@
-/*
-机场签到
-脚本兼容: Node.js
-
-[Script]
-cron "0 8 * * *" tag=机场签到
-*/
-
+/**
+ * new Env("机场签到")
+ * cron: 0 8 * * *
+ */
 const axios = require('axios');
 
 const loginPath = '/auth/login';

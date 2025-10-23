@@ -9,7 +9,6 @@ class Logger {
 
   constructor(scriptName) {
     this.scriptName = scriptName;
-    this.notifyMessage.push(`${scriptName}`);
   }
 
   /**
@@ -33,7 +32,7 @@ class Logger {
   }
 
   notify() {
-    QLAPI.notify(this.notifyMessage.join('\n'), '');
+    QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
     this.notifyMessage = [];
   }
 }

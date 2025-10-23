@@ -6,7 +6,7 @@ const axios = require('axios');
 const { Logger } = require('./logger.js');
 
 const logger = new Logger('机场签到');
-const cookie = '';
+let cookie = '';
 
 const loginPath = '/auth/login';
 const checkPath = '/user/checkin';

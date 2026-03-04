@@ -10,7 +10,7 @@ const axios = require('axios');
 const { Logger, getEnv, sleep } = require('./util.js');
 
 const logger = new Logger('机场签到');
-const ckName = 'jcck';
+const envName = 'jc';
 let cookie = '';
 
 async function login(baseURL, email, passwd) {
@@ -47,7 +47,7 @@ async function check(baseURL) {
 }
 
 !(async () => {
-  const ckArr = getEnv(ckName);
+  const ckArr = getEnv(envName);
 
   for (const ck of ckArr) {
     try {

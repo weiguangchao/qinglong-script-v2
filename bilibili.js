@@ -16,7 +16,7 @@ const axios = require('axios');
 const { Logger, getEnv, getCookieProperty, sleep } = require('./util.js');
 
 const logger = new Logger('哔哩哔哩每日任务');
-const ckName = 'bilibili';
+const envName = 'bilibili';
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 
@@ -259,12 +259,12 @@ async function vipPrivilegeMy(cookie) {
 }
 
 !(async () => {
-  const ckArr = getEnv(ckName);
+  const envs = getEnv(envName);
 
-  for (const ck of ckArr) {
+  for (const env of envs) {
     try {
-      const items = ck.split(';;;');
-      const [cookie, coinNum, coinType] = items;
+      const config = env.split(';;;');
+      const [cookie, coinNum, coinType] = config;
       const csrf = getCookieProperty(cookie, 'bili_jct');
 
       logger.log(`cookie: ${cookie}`);

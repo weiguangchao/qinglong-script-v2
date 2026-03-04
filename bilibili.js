@@ -146,15 +146,11 @@ async function silver2coin(cookie, csrf) {
       logger.log(`coinType: ${coinType}`);
       logger.log(`csrf: ${csrf}`);
 
-      // await nav(cookie);
-      await mangaClockIn(cookie);
-       await vipPrivilegeReceive(
-        cookie,
-        coinType,
-        csrf,
-      );
-      await mangaGetVipReward(cookie);
-      await silver2coin(cookie, csrf);
+      await nav(cookie); // 获取用户信息
+      await mangaClockIn(cookie); // 漫画签到
+      await vipPrivilegeReceive(cookie, coinType, csrf); // 领取大会员权益
+      await mangaGetVipReward(cookie); // 漫画大会员权益
+      await silver2coin(cookie, csrf); // 银瓜子换硬币
     } catch (error) {
       logger.logAll(error.message);
     }

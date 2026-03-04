@@ -5,7 +5,10 @@
 if (typeof QLAPI === 'undefined') {
   global.QLAPI = {
     notify: (title, message) => {},
-    searchValue: (envName) => {},
+    searchValue: (envName) => {
+      const value = process.env[envName];
+      return [{ value, name: envName }];
+    },
   };
 }
 
@@ -44,10 +47,10 @@ class Logger {
   }
 }
 
-function getEnv(envName, defaultValue = ['']) {
+function getEnv(envName) {
   const envItems = QLAPI.searchValue(envName);
   if (!envItems || envItems.length == 0) {
-    return defaultValue;
+    throw new Error(`未找到环境变量 ${envName}`);
   }
 
   const ckArr = envItems.map((item) => item.value);
@@ -65,4 +68,3 @@ function getCookieProperty(cookie, propertyName) {
 }
 
 export { getCookieProperty, getEnv, Logger, sleep };
-

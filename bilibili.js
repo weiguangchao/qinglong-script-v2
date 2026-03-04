@@ -132,6 +132,31 @@ async function silver2coin(cookie, csrf) {
   logger.logAll(`银瓜子换硬币：${body.message}`);
 }
 
+// 获取直播金银瓜子状态
+async function liveStatus(cookie) {
+  const response = await axios.get(
+    'https://api.live.bilibili.com/pay/v1/Exchange/getStatus',
+    {
+      headers: {
+        Cookie: cookie,
+        'User-Agent': UA,
+      },
+    },
+  );
+
+  const body = response.data;
+  if (body.code != 0) {
+    throw new Error(body.message);
+  }
+
+  const coin = body.data?.coin;
+  const gold = body.data?.gold;
+  const silver = body.data?.silver;
+  logger.log(`硬币: ${coin}, 金瓜子: ${gold}, 银瓜子: ${silver}`);
+
+  return { coin, gold, silver };
+}
+
 !(async () => {
   const ckArr = getEnv(ckName);
 
@@ -146,11 +171,12 @@ async function silver2coin(cookie, csrf) {
       logger.log(`coinType: ${coinType}`);
       logger.log(`csrf: ${csrf}`);
 
-      await nav(cookie); // 获取用户信息
-      await mangaClockIn(cookie); // 漫画签到
-      await vipPrivilegeReceive(cookie, coinType, csrf); // 领取大会员权益
-      await mangaGetVipReward(cookie); // 漫画大会员权益
-      await silver2coin(cookie, csrf); // 银瓜子换硬币
+      // await nav(cookie); // 获取用户信息
+      // await mangaClockIn(cookie); // 漫画签到
+      // await vipPrivilegeReceive(cookie, coinType, csrf); // 领取大会员权益
+      // await mangaGetVipReward(cookie); // 漫画大会员权益
+      // await silver2coin(cookie, csrf); // 银瓜子换硬币
+      await liveStatus(cookie); // 获取直播金银瓜子状态
     } catch (error) {
       logger.logAll(error.message);
     }

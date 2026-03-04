@@ -47,15 +47,15 @@ async function check(baseURL, cookie) {
 }
 
 !(async () => {
-  const ckArr = getEnv(envName);
+  const envs = getEnv(envName);
 
-  for (const ck of ckArr) {
+  for (const env of envs) {
     try {
-      const jc = ck.split(';;;');
-      const cookie = await login(jc[0], jc[1], jc[2]);
+      const config = env.split(';;;');
+      const cookie = await login(config[0], config[1], config[2]);
       await sleep(1000);
 
-      await check(jc[0], cookie);
+      await check(config[0], cookie);
       await sleep(1000);
     } catch (error) {
       logger.logAll(error.message);

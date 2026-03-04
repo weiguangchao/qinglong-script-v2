@@ -12,7 +12,7 @@ const { Logger, getEnv, getCookieProperty } = require('./util.js');
 const logger = new Logger('哔哩哔哩每日任务');
 const ckName = 'bilibili_ck';
 const UA =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.64';
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 
 // 获取用户信息
 async function nav(cookie) {
@@ -157,6 +157,25 @@ async function liveStatus(cookie) {
   return { coin, gold, silver };
 }
 
+// 首页top推荐
+async function topRcmd(cookie) {
+  const response = await axios.get(
+    'https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd',
+    {
+      headers: {
+        Cookie: cookie,
+        'User-Agent': UA,
+      },
+    },
+  );
+
+  const body = response.data;
+  if (body.code != 0) {
+    throw new Error(body.message);
+  }
+  return body.data;
+}
+
 !(async () => {
   const ckArr = getEnv(ckName);
 
@@ -176,7 +195,8 @@ async function liveStatus(cookie) {
       // await vipPrivilegeReceive(cookie, coinType, csrf); // 领取大会员权益
       // await mangaGetVipReward(cookie); // 漫画大会员权益
       // await silver2coin(cookie, csrf); // 银瓜子换硬币
-      await liveStatus(cookie); // 获取直播金银瓜子状态
+      // await liveStatus(cookie); // 获取直播金银瓜子状态
+      // await topRcmd(cookie, csrf); // 首页top推荐
     } catch (error) {
       logger.logAll(error.message);
     }

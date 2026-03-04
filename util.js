@@ -5,7 +5,7 @@
 class Logger {
   startTime = Date.now();
   notifyMessage = [];
-  scriptName = '';
+  scriptName = "";
 
   constructor(scriptName) {
     this.scriptName = scriptName;
@@ -32,30 +32,19 @@ class Logger {
   }
 
   notify() {
-    QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
+    QLAPI.notify(this.scriptName, this.notifyMessage.join("\n"));
     this.notifyMessage = [];
   }
 }
 
 function getEnv(envName) {
-  let ckArr = [];
-  let ck = process.env[envName];
-
-  if (!ck) {
-    console.log('ck未定义!!!');
+  const envItems = QLAPI.searchValue(envName);
+  if (!envItems || envItems.length == 0) {
+    console.log("ck未定义!!!");
     process.exit(0);
   }
 
-  if (Array.isArray(ck)) {
-    ckArr = ck;
-  } else if (ck.indexOf('&') > -1) {
-    ckArr = ck.split('&');
-  } else if (ck.indexOf('\n') > -1) {
-    ckArr = ck.split('\n');
-  } else {
-    ckArr.push(ck);
-  }
-
+  const ckArr = envItems.map((item) => item.value);
   console.log(`ck数量: ${ckArr.length}`);
   return ckArr;
 }
@@ -64,4 +53,4 @@ async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export { Logger, getEnv, sleep };
+export { getEnv, Logger, sleep };

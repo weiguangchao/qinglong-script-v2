@@ -2,16 +2,6 @@
  * new Env("工具类")
  * cron: 1 1 1 1 *
  */
-if (typeof QLAPI === 'undefined') {
-  global.QLAPI = {
-    notify: (title, message) => {},
-    getEnvs: (obj) => {
-      const value = process.env[obj.searchValue];
-      return [{ value, name: obj.searchValue }];
-    },
-  };
-}
-
 class Logger {
   startTime = Date.now();
   notifyMessage = [];
@@ -42,12 +32,22 @@ class Logger {
   }
 
   notify() {
-    QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
+    if (typeof QLAPI !== 'undefined') {
+      QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
+    }
     this.notifyMessage = [];
   }
 }
 
 async function getEnv(envName) {
+  if (typeof QLAPI === 'undefined') {
+    const env = process.env[envName];
+    if (!env) {
+      throw new Error(`未找到环境变量 ${envName}`);
+    }
+    return [env];
+  }
+
   const response = await QLAPI.getEnvs({ searchValue: '' });
   if (response.code !== 200 || !response.data?.length) {
     throw new Error(`查找环境变量出错: ${response.message}`);

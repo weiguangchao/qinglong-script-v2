@@ -176,6 +176,31 @@ async function topRcmd(cookie) {
   return body.data;
 }
 
+// 上报视频进度
+async function historyReport(cookie, csrf, aid, cid, progres = 300) {
+  const response = await axios.post(
+    'http://api.bilibili.com/x/v2/history/report',
+    new URLSearchParams({
+      aid,
+      cid,
+      progres,
+      csrf,
+    }).toString(),
+    {
+      headers: {
+        Cookie: cookie,
+        'User-Agent': UA,
+      },
+    },
+  );
+
+  const body = response.data;
+  if (body.code != 0) {
+    throw new Error(body.message);
+  }
+  logger.logAll(`上报视频进度：${body.message}`);
+}
+
 !(async () => {
   const ckArr = getEnv(ckName);
 
@@ -197,6 +222,7 @@ async function topRcmd(cookie) {
       // await silver2coin(cookie, csrf); // 银瓜子换硬币
       // await liveStatus(cookie); // 获取直播金银瓜子状态
       // await topRcmd(cookie, csrf); // 首页top推荐
+      // await historyReport(cookie, csrf, 116154571952302, 25972445327); // 上报视频进度
     } catch (error) {
       logger.logAll(error.message);
     }

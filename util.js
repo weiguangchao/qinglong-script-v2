@@ -2,6 +2,13 @@
  * new Env("工具类")
  * cron: 1 1 1 1 *
  */
+if (typeof QLAPI === 'undefined') {
+  global.QLAPI = {
+    notify: (title, message) => {},
+    searchValue: (envName) => {},
+  };
+}
+
 class Logger {
   startTime = Date.now();
   notifyMessage = [];
@@ -37,11 +44,10 @@ class Logger {
   }
 }
 
-function getEnv(envName) {
+function getEnv(envName, defaultValue = ['']) {
   const envItems = QLAPI.searchValue(envName);
   if (!envItems || envItems.length == 0) {
-    console.log('ck未定义!!!');
-    process.exit(0);
+    return defaultValue;
   }
 
   const ckArr = envItems.map((item) => item.value);
@@ -53,4 +59,10 @@ async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export { getEnv, Logger, sleep };
+function getCookieProperty(cookie, propertyName) {
+  const match = cookie.match(new RegExp(`${propertyName}=([^;]+)`));
+  return match ? match[1] : '';
+}
+
+export { getCookieProperty, getEnv, Logger, sleep };
+

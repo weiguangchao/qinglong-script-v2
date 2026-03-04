@@ -173,7 +173,11 @@ async function topRcmd(cookie) {
   if (body.code != 0) {
     throw new Error(body.message);
   }
-  return body.data;
+  return body.data.item.map((item) => ({
+    aid: item.id,
+    cid: item.cid,
+    title: item.title,
+  }));
 }
 
 // 上报视频进度
@@ -221,7 +225,7 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
       // await mangaGetVipReward(cookie); // 漫画大会员权益
       // await silver2coin(cookie, csrf); // 银瓜子换硬币
       // await liveStatus(cookie); // 获取直播金银瓜子状态
-      // await topRcmd(cookie, csrf); // 首页top推荐
+      const tops = await topRcmd(cookie, csrf); // 首页top推荐
       // await historyReport(cookie, csrf, 116154571952302, 25972445327); // 上报视频进度
     } catch (error) {
       logger.logAll(error.message);

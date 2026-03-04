@@ -32,7 +32,9 @@ class Logger {
   }
 
   notify() {
-    QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
+    if (QLAPI) {
+      QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
+    }
     this.notifyMessage = [];
   }
 }

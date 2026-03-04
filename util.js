@@ -47,16 +47,24 @@ class Logger {
   }
 }
 
-async function getEnv(ckName) {
-  const envItems = await QLAPI.getEnvs({ searchValue: ckName });
-  if (!envItems || envItems.length == 0) {
-    throw new Error(`未找到环境变量 ${ckName}`);
+async function getEnv(envName) {
+  const response = await QLAPI.getEnvs({ searchValue: '' });
+  if (response.code !== 200 || !response.data?.length) {
+    throw new Error(`查找环境变量出错: ${response.message}`);
   }
 
-  console.log(`找到环境变量 ${JSON.stringify(envItems)}`);
-  const values = envItems.map((item) => item.value);
-  console.log(`env数量: ${values.length}`);
-  return values;
+  const envItems = response.data
+    .filter((item) => {
+      return item.name === envName;
+    })
+    .map((item) => item.value);
+
+  if (!envItems) {
+    throw new Error(`未找到环境变量 ${envName}`);
+  }
+
+  console.log(`env数量: ${envItems.length}`);
+  return envItems;
 }
 
 async function sleep(ms) {

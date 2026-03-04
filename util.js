@@ -54,9 +54,9 @@ async function getEnv(ckName) {
   }
 
   console.log(`找到环境变量 ${JSON.stringify(envItems)}`);
-  const ckArr = envItems.map((item) => item.value);
-  console.log(`ck数量: ${ckArr.length}`);
-  return ckArr;
+  const values = envItems.map((item) => item.value);
+  console.log(`env数量: ${values.length}`);
+  return values;
 }
 
 async function sleep(ms) {

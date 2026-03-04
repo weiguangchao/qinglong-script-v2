@@ -51,7 +51,7 @@ async function nav(cookie) {
 }
 
 // 漫画客户端签到
-async function mangaSignIn(cookie) {
+async function mangaClockIn(cookie) {
   const response = await axios.post(
     'https://manga.bilibili.com/twirp/activity.v1.Activity/ClockIn',
     new URLSearchParams({ platform: 'android' }).toString(),

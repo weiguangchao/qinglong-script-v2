@@ -34,6 +34,8 @@ class Logger {
   notify() {
     if (QLAPI) {
       QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
+    } else {
+      console.error('QLAPI未定义!!!');
     }
     this.notifyMessage = [];
   }

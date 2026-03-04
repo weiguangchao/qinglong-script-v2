@@ -55,7 +55,9 @@ async function check(baseURL, cookie) {
       const cookie = await login(config[0], config[1], config[2]);
       await sleep(1000);
 
-      await check(config[0], cookie);
+      await check(config[0], cookie).catch((error) => {
+        logger.logAll(error.message);
+      });
       await sleep(1000);
     } catch (error) {
       logger.logAll(error.message);

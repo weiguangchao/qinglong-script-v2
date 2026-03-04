@@ -117,6 +117,7 @@ async function mangaGetVipReward(cookie) {
       const items = ck.split(';;;');
       const [cookie, coinNum, coinType] = items;
       const csrf = getCookieProperty(cookie, 'bili_jct');
+      
       logger.log(`cookie: ${cookie}`);
       logger.log(`coinNum: ${coinNum}`);
       logger.log(`coinType: ${coinType}`);

@@ -95,26 +95,6 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
   logger.logAll(`大会员权益领取: ${body.message}`);
 }
 
-// 大会员漫画权益
-async function vipMangaReward(cookie) {
-  const response = await axios.post(
-    'https://manga.bilibili.com/twirp/user.v1.User/GetVipReward',
-    { reason_id: 1 },
-    {
-      headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
-      },
-    },
-  );
-
-  const body = response.data;
-  if (body.code != 0) {
-    logger.logAll(`漫画大会员权益领取失败: ${body.msg}`);
-  }
-  logger.logAll(`漫画大会员权益领取: ${body.msg}`);
-}
-
 // 银瓜子换硬币
 async function silver2coin(cookie, csrf) {
   const response = await axios.post(

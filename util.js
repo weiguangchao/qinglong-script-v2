@@ -47,10 +47,10 @@ class Logger {
   }
 }
 
-function getEnv(envName) {
-  const envItems = QLAPI.getEnvs(envName);
+function getEnv(ckName) {
+  const envItems = QLAPI.getEnvs({ searchValue: ckName });
   if (!envItems || envItems.length == 0) {
-    throw new Error(`未找到环境变量 ${envName}`);
+    throw new Error(`未找到环境变量 ${ckName}`);
   }
 
   const ckArr = envItems.map((item) => item.value);

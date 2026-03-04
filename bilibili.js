@@ -8,7 +8,7 @@
  * 3.漫画签到
  * 4.领取大会员权益
  *
- * ck名称：bilibili
+ * ck名称: bilibili
  * ck格式: cookie;;;
  *
  */

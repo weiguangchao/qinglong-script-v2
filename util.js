@@ -53,6 +53,7 @@ function getEnv(ckName) {
     throw new Error(`未找到环境变量 ${ckName}`);
   }
 
+  console.log(`找到环境变量 ${JSON.stringify(envItems)}`);
   const ckArr = envItems.map((item) => item.value);
   console.log(`ck数量: ${ckArr.length}`);
   return ckArr;

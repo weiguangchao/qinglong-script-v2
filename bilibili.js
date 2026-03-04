@@ -61,8 +61,8 @@ async function mangaClockIn(cookie) {
   const body = response.data;
   if (body.code != 0) {
     logger.logAll(`漫画签到失败：${body.msg}`);
-    throw new Error(body.msg);
   }
+  logger.logAll(`漫画签到：${body.msg}`);
 }
 
 // 领取大会员权益
@@ -85,8 +85,8 @@ async function vipPrivilegeReceive(cookie, type, csrf) {
   const body = response.data;
   if (body.code != 0) {
     logger.logAll(`大会员权益领取失败：${body.message}`);
-    throw new Error(body.message);
   }
+  logger.logAll(`大会员权益领取：${body.message}`);
 }
 
 // 漫画大会员权益
@@ -105,8 +105,8 @@ async function mangaGetVipReward(cookie) {
   const body = response.data;
   if (body.code != 0) {
     logger.logAll(`漫画大会员权益领取失败：${body.msg}`);
-    throw new Error(body.msg);
   }
+  logger.logAll(`漫画大会员权益领取：${body.msg}`);
 }
 
 // 银瓜子换硬币
@@ -128,8 +128,8 @@ async function silver2coin(cookie, csrf) {
   const body = response.data;
   if (body.code != 0) {
     logger.logAll(`银瓜子换硬币失败：${body.message}`);
-    throw new Error(body.message);
   }
+  logger.logAll(`银瓜子换硬币：${body.message}`);
 }
 
 !(async () => {
@@ -147,9 +147,13 @@ async function silver2coin(cookie, csrf) {
       logger.log(`csrf: ${csrf}`);
 
       // await nav(cookie);
-      // await mangaClockIn(cookie);
-      // await vipPrivilegeReceive(cookie, coinType, csrf);
-      // await mangaGetVipReward(cookie);
+      await mangaClockIn(cookie);
+       await vipPrivilegeReceive(
+        cookie,
+        coinType,
+        csrf,
+      );
+      await mangaGetVipReward(cookie);
       await silver2coin(cookie, csrf);
     } catch (error) {
       logger.logAll(error.message);

@@ -109,6 +109,29 @@ async function mangaGetVipReward(cookie) {
   }
 }
 
+// 银瓜子换硬币
+async function silver2coin(cookie, csrf) {
+  const response = await axios.post(
+    'https://api.live.bilibili.com/xlive/revenue/v1/wallet/silver2coin',
+    new URLSearchParams({
+      csrf,
+    }).toString(),
+    {
+      headers: {
+        Cookie: cookie,
+        'User-Agent': UA,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+
+  const body = response.data;
+  if (body.code != 0) {
+    logger.logAll(`银瓜子换硬币失败：${body.message}`);
+    throw new Error(body.message);
+  }
+}
+
 !(async () => {
   const ckArr = getEnv(ckName);
 
@@ -117,7 +140,7 @@ async function mangaGetVipReward(cookie) {
       const items = ck.split(';;;');
       const [cookie, coinNum, coinType] = items;
       const csrf = getCookieProperty(cookie, 'bili_jct');
-      
+
       logger.log(`cookie: ${cookie}`);
       logger.log(`coinNum: ${coinNum}`);
       logger.log(`coinType: ${coinType}`);
@@ -127,6 +150,7 @@ async function mangaGetVipReward(cookie) {
       // await mangaClockIn(cookie);
       // await vipPrivilegeReceive(cookie, coinType, csrf);
       // await mangaGetVipReward(cookie);
+      await silver2coin(cookie, csrf);
     } catch (error) {
       logger.logAll(error.message);
     }

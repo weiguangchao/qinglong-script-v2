@@ -5,9 +5,9 @@
 if (typeof QLAPI === 'undefined') {
   global.QLAPI = {
     notify: (title, message) => {},
-    searchValue: (envName) => {
-      const value = process.env[envName];
-      return [{ value, name: envName }];
+    getEnvs: (obj) => {
+      const value = process.env[obj.searchValue];
+      return [{ value, name: obj.searchValue }];
     },
   };
 }
@@ -48,7 +48,7 @@ class Logger {
 }
 
 function getEnv(envName) {
-  const envItems = QLAPI.searchValue(envName);
+  const envItems = QLAPI.getEnvs(envName);
   if (!envItems || envItems.length == 0) {
     throw new Error(`未找到环境变量 ${envName}`);
   }

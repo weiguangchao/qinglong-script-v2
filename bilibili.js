@@ -67,7 +67,7 @@ async function mangaClockIn(cookie) {
 
 // 领取大会员权益
 // type int 权益类型 1为B币劵 2为优惠券
-async function vipPrivilegeReceive(cookie, type, csrf) {
+async function vipPrivilegeReceive(cookie, csrf, type) {
   const response = await axios.post(
     'https://api.bilibili.com/x/vip/privilege/receive',
     new URLSearchParams({

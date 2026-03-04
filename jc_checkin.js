@@ -11,7 +11,6 @@ const { Logger, getEnv, sleep } = require('./util.js');
 
 const logger = new Logger('机场签到');
 const envName = 'jc';
-let cookie = '';
 
 async function login(baseURL, email, passwd) {
   logger.log(`${baseURL} ${email} 正在登录`);
@@ -25,11 +24,12 @@ async function login(baseURL, email, passwd) {
     throw new Error(`登录失败: ${data.msg}`);
   }
 
-  cookie = response.headers['set-cookie'];
+  const cookie = response.headers['set-cookie'];
   logger.log(`cookie: ${cookie}`);
+  return cookie;
 }
 
-async function check(baseURL) {
+async function check(baseURL, cookie) {
   logger.log(`${baseURL} 正在签到`);
   const response = await axios(`${baseURL}/user/checkin`, {
     method: 'POST',
@@ -52,10 +52,10 @@ async function check(baseURL) {
   for (const ck of ckArr) {
     try {
       const jc = ck.split(';;;');
-      await login(jc[0], jc[1], jc[2]);
+      const cookie = await login(jc[0], jc[1], jc[2]);
       await sleep(1000);
 
-      await check(jc[0]);
+      await check(jc[0], cookie);
       await sleep(1000);
     } catch (error) {
       logger.logAll(error.message);

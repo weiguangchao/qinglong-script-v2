@@ -16,7 +16,7 @@ const axios = require('axios');
 const { Logger, getEnv, getCookieProperty, sleep } = require('./util.js');
 
 const logger = new Logger('哔哩哔哩每日任务');
-const ckName = 'bilibili_ck';
+const ckName = 'bilibili';
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 

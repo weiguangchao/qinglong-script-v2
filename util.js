@@ -47,8 +47,8 @@ class Logger {
   }
 }
 
-function getEnv(ckName) {
-  const envItems = QLAPI.getEnvs({ searchValue: ckName });
+async function getEnv(ckName) {
+  const envItems = await QLAPI.getEnvs({ searchValue: ckName });
   if (!envItems || envItems.length == 0) {
     throw new Error(`未找到环境变量 ${ckName}`);
   }

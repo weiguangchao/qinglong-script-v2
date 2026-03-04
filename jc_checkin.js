@@ -47,7 +47,7 @@ async function check(baseURL, cookie) {
 }
 
 !(async () => {
-  const envs = getEnv(envName);
+  const envs = await getEnv(envName);
 
   for (const env of envs) {
     try {

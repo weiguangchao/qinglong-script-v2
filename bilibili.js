@@ -34,7 +34,7 @@ async function nav(cookie) {
 
   const body = response.data;
   if (body.code != 0) {
-    throw new Error(body.message);
+    throw new Error(`获取用户信息失败: ${body.message}`);
   }
 
   const uname = body.data?.uname;
@@ -66,7 +66,7 @@ async function mangaClockIn(cookie) {
 
   const body = response.data;
   if (body.code != 0) {
-    logger.logAll(`漫画签到失败: ${body.msg}`);
+    throw new Error(`漫画签到失败: ${body.msg}`);
   }
   logger.logAll(`漫画签到: ${body.msg}`);
 }
@@ -90,7 +90,7 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
 
   const body = response.data;
   if (body.code != 0) {
-    logger.logAll(`大会员权益领取失败: ${body.message}`);
+    throw new Error(`大会员权益领取失败: ${body.message}`);
   }
   logger.logAll(`大会员权益领取: ${body.message}`);
 }
@@ -133,7 +133,7 @@ async function silver2coin(cookie, csrf) {
 
   const body = response.data;
   if (body.code != 0) {
-    logger.logAll(`银瓜子换硬币失败: ${body.message}`);
+    throw new Error(`银瓜子换硬币失败: ${body.message}`);
   }
   logger.logAll(`银瓜子换硬币: ${body.message}`);
 }
@@ -152,7 +152,7 @@ async function liveStatus(cookie) {
 
   const body = response.data;
   if (body.code != 0) {
-    throw new Error(body.message);
+    throw new Error(`获取直播金银瓜子状态失败: ${body.message}`);
   }
 
   const coin = body.data?.coin;
@@ -177,7 +177,7 @@ async function topRcmd(cookie) {
 
   const body = response.data;
   if (body.code != 0) {
-    throw new Error(body.message);
+    throw new Error(`首页top推荐失败: ${body.message}`);
   }
   return body.data.item.map((item) => ({
     aid: item.id,
@@ -206,7 +206,7 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
 
   const body = response.data;
   if (body.code != 0) {
-    throw new Error(body.message);
+    throw new Error(`上报视频进度失败: ${body.message}`);
   }
   logger.logAll(
     `上报视频进度, aid: ${aid}, cid: ${cid}, progres: ${progres}, message: ${body.message}`,
@@ -232,7 +232,7 @@ async function shareAdd(cookie, csrf, aid) {
 
   const body = response.data;
   if (body.code != 0) {
-    throw new Error(body.message);
+    throw new Error(`分享视频失败: ${body.message}`);
   }
   logger.logAll(`分享视频：${body.message}`);
 }
@@ -251,7 +251,7 @@ async function vipPrivilegeMy(cookie) {
 
   const body = response.data;
   if (body.code != 0) {
-    throw new Error(body.message);
+    throw new Error(`获取大会员权益失败: ${body.message}`);
   }
   logger.logAll(`大会员硬币经验信息: ${body.message}`);
 
@@ -275,13 +275,15 @@ async function vipPrivilegeMy(cookie) {
       const { vip_type } = await nav(cookie); // 获取用户信息
       await sleep(1000);
 
-      await mangaClockIn(cookie); // 漫画签到
+      await mangaClockIn(cookie).catch((error) => logger.logAll(error.message)); // 漫画签到
       await sleep(1000);
 
-      await liveStatus(cookie); // 获取直播金银瓜子状态
+      await liveStatus(cookie).catch((error) => logger.logAll(error.message)); // 获取直播金银瓜子状态
       await sleep(1000);
 
-      await silver2coin(cookie, csrf); // 银瓜子换硬币
+      await silver2coin(cookie, csrf).catch((error) =>
+        logger.logAll(error.message),
+      ); // 银瓜子换硬币
       await sleep(1000);
 
       const tops = await topRcmd(cookie, csrf); // 首页top推荐
@@ -298,7 +300,9 @@ async function vipPrivilegeMy(cookie) {
       for (const welfare of vipData.list) {
         // 领取大会员权益
         if (welfare.state === 0 && welfare.vip_type === vip_type) {
-          await vipPrivilegeReceive(cookie, csrf, welfare.type); // 领取大会员权益
+          await vipPrivilegeReceive(cookie, csrf, welfare.type).catch((error) =>
+            logger.logAll(error.message),
+          ); // 领取大会员权益
           sleep(1000);
         }
       }

@@ -45,7 +45,7 @@ async function nav(cookie) {
 }
 
 // 漫画客户端签到
-async function mangaClockIn(cookie) {
+async function mangaSignIn(cookie) {
   const response = await axios.post(
     'https://manga.bilibili.com/twirp/activity.v1.Activity/ClockIn',
     new URLSearchParams({ platform: 'android' }).toString(),
@@ -89,8 +89,8 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
   logger.logAll(`大会员权益领取：${body.message}`);
 }
 
-// 漫画大会员权益
-async function mangaGetVipReward(cookie) {
+// 大会员漫画权益
+async function vipMangaReward(cookie) {
   const response = await axios.post(
     'https://manga.bilibili.com/twirp/user.v1.User/GetVipReward',
     { reason_id: 1 },

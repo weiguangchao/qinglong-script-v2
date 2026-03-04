@@ -5,7 +5,7 @@
 class Logger {
   startTime = Date.now();
   notifyMessage = [];
-  scriptName = "";
+  scriptName = '';
 
   constructor(scriptName) {
     this.scriptName = scriptName;
@@ -32,7 +32,7 @@ class Logger {
   }
 
   notify() {
-    QLAPI.notify(this.scriptName, this.notifyMessage.join("\n"));
+    QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
     this.notifyMessage = [];
   }
 }
@@ -40,7 +40,7 @@ class Logger {
 function getEnv(envName) {
   const envItems = QLAPI.searchValue(envName);
   if (!envItems || envItems.length == 0) {
-    console.log("ck未定义!!!");
+    console.log('ck未定义!!!');
     process.exit(0);
   }
 

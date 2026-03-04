@@ -50,11 +50,11 @@ async function check(baseURL) {
 }
 
 !(async () => {
-  const jcckArr = getEnv(ckName);
+  const ckArr = getEnv(ckName);
 
-  for (const jcck of jcckArr) {
+  for (const ck of ckArr) {
     try {
-      const jc = jcck.split(";;;");
+      const jc = ck.split(";;;");
       await login(jc[0], jc[1], jc[2]);
       await sleep(1000);
 

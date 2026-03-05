@@ -17,6 +17,9 @@ async function login(baseURL, email, passwd) {
   const response = await axios(`${baseURL}/auth/login`, {
     method: 'POST',
     params: { email, passwd },
+    headers: {
+      'User-Agent': UA,
+    },
   });
 
   const data = response.data;
@@ -34,6 +37,7 @@ async function checkin(baseURL, cookie) {
   const response = await axios(`${baseURL}/user/checkin`, {
     method: 'POST',
     headers: {
+      'User-Agent': UA,
       Cookie: cookie,
     },
   });

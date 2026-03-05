@@ -24,7 +24,7 @@ async function login(baseURL, email, passwd) {
 
   const data = response.data;
   if (data.ret != 1) {
-    throw new Error(`系统: 登录失败! ${data.msg}`);
+    throw new Error(`用户登录: 登录失败! ${data.msg}`);
   }
 
   const cookie = response.headers['set-cookie'];

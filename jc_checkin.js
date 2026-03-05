@@ -29,7 +29,7 @@ async function login(baseURL, email, passwd) {
   return cookie;
 }
 
-async function check(baseURL, cookie) {
+async function checkin(baseURL, cookie) {
   logger.log(`${baseURL} 正在签到`);
   const response = await axios(`${baseURL}/user/checkin`, {
     method: 'POST',
@@ -57,7 +57,7 @@ async function check(baseURL, cookie) {
       const cookie = await login(baseURL, email, passwd);
       await sleep(1000);
 
-      await check(baseURL, cookie).catch((error) => {
+      await checkin(baseURL, cookie).catch((error) => {
         logger.logAll(`机场 ${baseURL} 签到失败: ${error.message}`);
       });
       await sleep(1000);

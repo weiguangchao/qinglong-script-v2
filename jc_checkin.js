@@ -24,7 +24,7 @@ async function login(baseURL, email, passwd) {
 
   const data = response.data;
   if (data.ret != 1) {
-    throw new Error(`登录失败: ${data.msg}`);
+    throw new Error(`系统: 登录失败! ${data.msg}`);
   }
 
   const cookie = response.headers['set-cookie'];
@@ -44,10 +44,10 @@ async function checkin(baseURL, cookie) {
 
   const data = response.data;
   if (data.ret != 1) {
-    throw new Error(`签到失败: ${data.msg}`);
+    throw new Error(`签到: 签到失败! ${data.msg}`);
   }
 
-  logger.logAll(`机场 ${baseURL} 签到成功: ${data.msg}`);
+  logger.logAll(`签到: ${baseURL} 签到成功: ${data.msg}`);
 }
 
 !(async () => {
@@ -62,7 +62,7 @@ async function checkin(baseURL, cookie) {
       await sleep(1000);
 
       await checkin(baseURL, cookie).catch((error) => {
-        logger.logAll(`机场 ${baseURL} 签到失败: ${error.message}`);
+        logger.logAll(error.message);
       });
       await sleep(1000);
     } catch (error) {

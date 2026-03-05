@@ -43,7 +43,7 @@ async function check(baseURL, cookie) {
     throw new Error(`签到失败: ${data.msg}`);
   }
 
-  logger.logAll(`签到成功: ${data.msg}`);
+  logger.logAll(`机场 ${baseURL} 签到成功: ${data.msg}`);
 }
 
 !(async () => {
@@ -52,11 +52,13 @@ async function check(baseURL, cookie) {
   for (const env of envs) {
     try {
       const config = env.split(';;;');
-      const cookie = await login(config[0], config[1], config[2]);
+      const [baseURL, email, passwd] = config;
+
+      const cookie = await login(baseURL, email, passwd);
       await sleep(1000);
 
-      await check(config[0], cookie).catch((error) => {
-        logger.logAll(error.message);
+      await check(baseURL, cookie).catch((error) => {
+        logger.log(error.message);
       });
       await sleep(1000);
     } catch (error) {

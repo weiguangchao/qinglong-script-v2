@@ -269,16 +269,6 @@ async function vipPrivilegeMy(cookie) {
       }); // 漫画签到
       await sleep(1000);
 
-      const { coin, gold, silver } = await liveStatus(cookie).catch((error) =>
-        logger.logAll(error.message),
-      ); // 获取直播金银瓜子状态
-      await sleep(1000);
-
-      await silver2coin(cookie, csrf).catch((error) => {
-        logger.logAll(error.message);
-      }); // 银瓜子换硬币
-      await sleep(1000);
-
       const tops = await topRcmd(cookie, csrf); // 首页top推荐
       await sleep(1000);
 
@@ -288,6 +278,14 @@ async function vipPrivilegeMy(cookie) {
 
       await shareAdd(cookie, csrf, tops[0].aid); // 分享视频
       logger.logAll(`分享视频: 分享《${tops[0].title}》`);
+      await sleep(1000);
+
+      await liveStatus(cookie).catch((error) => logger.logAll(error.message)); // 获取直播金银瓜子状态
+      await sleep(1000);
+
+      await silver2coin(cookie, csrf).catch((error) => {
+        logger.logAll(error.message);
+      }); // 银瓜子换硬币
       await sleep(1000);
 
       const vipData = await vipPrivilegeMy(cookie); // 获取大会员权益

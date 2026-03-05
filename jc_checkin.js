@@ -58,7 +58,7 @@ async function check(baseURL, cookie) {
       await sleep(1000);
 
       await check(baseURL, cookie).catch((error) => {
-        logger.log(error.message);
+        logger.logAll(`机场 ${baseURL} 签到失败: ${error.message}`);
       });
       await sleep(1000);
     } catch (error) {

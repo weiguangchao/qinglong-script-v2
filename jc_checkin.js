@@ -62,8 +62,8 @@ async function checkin(baseURL, cookie) {
       });
       await sleep(1000);
     } catch (error) {
-      logger.log(error.message);
       logger.logAll('脚本执行失败, 请到控制台查看日志');
+      logger.logAll(error.message);
     }
   }
   logger.notify();

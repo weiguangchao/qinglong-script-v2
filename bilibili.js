@@ -276,7 +276,9 @@ async function vipPrivilegeMy(cookie) {
       logger.logAll(`观看视频: 观看《${tops[0].title}》300秒`);
       await sleep(1000);
 
-      await shareAdd(cookie, csrf, tops[0].aid); // 分享视频
+      await shareAdd(cookie, csrf, tops[0].aid).catch((error) =>
+        logger.logAll(error.message),
+      ); // 分享视频
       logger.logAll(`分享视频: 分享《${tops[0].title}》`);
       await sleep(1000);
 

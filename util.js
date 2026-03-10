@@ -76,7 +76,25 @@ function getCookieProperty(cookie, propertyName) {
   return match ? match[1] : '';
 }
 
+/**
+ * 格式化日期
+ * @param {string} format - 格式字符串，支持: YYYY(年) MM(月) DD(日) HH(时) mm(分) ss(秒) SSS(毫秒)
+ * @param {Date} date - Date 对象，不传则使用当前时间
+ * @returns {string} 格式化后的日期字符串
+ * @example formatDate('YYYY-MM-DD HH:mm:ss', new Date()) // '2025-03-10 12:30:45'
+ */
+function formatDate(format, date = new Date()) {
+  return format
+    .replace(/YYYY/g, String(date.getFullYear()))
+    .replace(/MM/g, String(date.getMonth() + 1).padStart(2, '0'))
+    .replace(/DD/g, String(date.getDate()).padStart(2, '0'))
+    .replace(/HH/g, String(date.getHours()).padStart(2, '0'))
+    .replace(/mm/g, String(date.getMinutes()).padStart(2, '0'))
+    .replace(/ss/g, String(date.getSeconds()).padStart(2, '0'))
+    .replace(/SSS/g, String(date.getMilliseconds()).padStart(3, '0'));
+}
+
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 
-export { getCookieProperty, getEnv, Logger, sleep, UA };
+export { formatDate, getCookieProperty, getEnv, Logger, sleep, UA };

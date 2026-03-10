@@ -41,10 +41,17 @@ async function nav(cookie) {
   const is_login = body.data?.isLogin;
   const coin = body.data?.money;
   const vip_type = body.data?.vipType;
+  const current_level = body.data?.level_info?.current_level;
   const current_exp = body.data?.level_info?.current_exp;
   logger.log(
     `用户: ${uname}, uid: ${uid}, 是否登录: ${is_login}, 硬币: ${coin}, vip类型: ${vip_type}, 当前经验: ${current_exp}`,
   );
+
+  logger.logAll(`用户: ${uname}`);
+  logger.logAll(`大会员状态: ${vip_type === 2 ? '✅' : '❌'}`);
+  logger.logAll(`硬币: ${coin}`);
+  logger.logAll(`当前等级: ${current_level}`);
+  logger.logAll(`当前经验: ${current_exp}`);
 
   return { uname, uid, is_login, coin, vip_type, current_exp };
 }
@@ -283,11 +290,6 @@ async function vipPrivilegeMy(cookie) {
       await sleep(1000);
 
       await liveStatus(cookie).catch((error) => logger.logAll(error.message)); // 获取直播金银瓜子状态
-      await sleep(1000);
-
-      await silver2coin(cookie, csrf).catch((error) => {
-        logger.logAll(error.message);
-      }); // 银瓜子换硬币
       await sleep(1000);
 
       const vipData = await vipPrivilegeMy(cookie); // 获取大会员权益

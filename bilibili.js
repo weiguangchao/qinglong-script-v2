@@ -293,12 +293,10 @@ async function vipPrivilegeMy(cookie) {
   for (const env of envs) {
     try {
       const config = env.split(';;;');
-      const [cookie, coinNum, coinType] = config;
+      const [cookie] = config;
       const csrf = getCookieProperty(cookie, 'bili_jct');
 
       logger.log(`cookie: ${cookie}`);
-      logger.log(`coinNum: ${coinNum}`);
-      logger.log(`coinType: ${coinType}`);
       logger.log(`csrf: ${csrf}`);
 
       const { vip_type } = await nav(cookie); // 获取用户信息

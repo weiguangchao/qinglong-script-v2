@@ -302,8 +302,6 @@ async function vipPrivilegeMy(cookie) {
       const { vip_type } = await nav(cookie); // 获取用户信息
       await sleep(1000);
 
-      await expLog(cookie); // 获取今日经验信息
-
       await mangaClockIn(cookie).catch((error) => {
         logger.logAll(error.message);
       }); // 漫画签到
@@ -322,7 +320,7 @@ async function vipPrivilegeMy(cookie) {
       logger.logAll(`分享视频: 分享《${tops[0].title}》`);
       await sleep(1000);
 
-      await liveStatus(cookie).catch((error) => logger.logAll(error.message)); // 获取直播金银瓜子状态
+      await expLog(cookie); // 获取今日经验信息
       await sleep(1000);
 
       const vipData = await vipPrivilegeMy(cookie); // 获取大会员权益

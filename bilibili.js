@@ -14,7 +14,14 @@
  *
  */
 const axios = require('axios');
-const { Logger, getEnv, getCookieProperty, sleep, UA } = require('./util.js');
+const {
+  Logger,
+  getEnv,
+  getCookieProperty,
+  sleep,
+  UA,
+  formatDate,
+} = require('./util.js');
 
 const logger = new Logger('哔哩哔哩每日任务');
 const envName = 'bilibili';
@@ -54,6 +61,32 @@ async function nav(cookie) {
   logger.logAll(`当前经验: ${current_exp}`);
 
   return { uname, uid, is_login, coin, vip_type, current_exp };
+}
+
+// 获取今日经验信息
+async function expLog(cookie) {
+  const response = await axios.get(
+    'https://api.bilibili.com/x/member/web/exp/log?jsonp=jsonp',
+    {
+      headers: {
+        Cookie: cookie,
+        'User-Agent': UA,
+      },
+    },
+  );
+
+  const body = response.data;
+  if (body.code != 0) {
+    throw new Error(`今日经验: 获取失败! ${body.message}`);
+  }
+
+  const list = body.data?.list ?? [];
+  const d = new Date();
+  const todayExp = list
+    .filter((item) => item.time?.startsWith(formatDate('YYYY-MM-DD', d)))
+    .reduce((sum, item) => sum + (item.delta ?? 0), 0);
+
+  logger.logAll(`今日经验: ${todayExp}`);
 }
 
 // 漫画客户端签到
@@ -270,6 +303,8 @@ async function vipPrivilegeMy(cookie) {
 
       const { vip_type } = await nav(cookie); // 获取用户信息
       await sleep(1000);
+
+      await expLog(cookie); // 获取今日经验信息
 
       await mangaClockIn(cookie).catch((error) => {
         logger.logAll(error.message);

@@ -21,6 +21,7 @@ const {
   sleep,
   UA,
   formatDate,
+  CONTENT_TYPE_FORM,
 } = require('./util.js');
 
 const logger = new Logger('哔哩哔哩每日任务');
@@ -98,7 +99,7 @@ async function mangaClockIn(cookie) {
       headers: {
         cookie,
         'user-agent': UA,
-        'content-type': 'application/x-www-form-urlencoded',
+        'content-type': CONTENT_TYPE_FORM,
       },
     },
   );
@@ -147,7 +148,7 @@ async function silver2coin(cookie, csrf) {
       headers: {
         cookie,
         'user-agent': UA,
-        'content-type': 'application/x-www-form-urlencoded',
+        'content-type': CONTENT_TYPE_FORM,
       },
     },
   );
@@ -253,7 +254,7 @@ async function shareAdd(cookie, csrf, aid) {
       headers: {
         cookie,
         'user-agent': UA,
-        'content-type': 'application/x-www-form-urlencoded',
+        'content-type': CONTENT_TYPE_FORM,
       },
     },
   );

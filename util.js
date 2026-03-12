@@ -12,6 +12,7 @@ const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 
 const CONTENT_TYPE_JSON = 'application/json';
+const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
 
 class Logger {
   startTime = Date.now();
@@ -109,6 +110,7 @@ function formatDate(format, date = new Date()) {
 }
 
 export {
+  CONTENT_TYPE_FORM,
   CONTENT_TYPE_JSON,
   DEFAULT_SLEEP_TIME,
   formatDate,

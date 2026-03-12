@@ -41,7 +41,7 @@ class Logger {
   }
 
   notify() {
-    if (typeof QLAPI !== 'undefined') {
+    if (typeof QLAPI !== 'undefined' && this.notifyMessage.length > 0) {
       QLAPI.notify(this.scriptName, this.notifyMessage.join('\n'));
     }
     this.notifyMessage = [];
@@ -113,5 +113,6 @@ export {
   getEnv,
   Logger,
   sleep,
-  UA,
+  UA
 };
+

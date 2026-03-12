@@ -97,4 +97,14 @@ function formatDate(format, date = new Date()) {
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 
-export { formatDate, getCookieProperty, getEnv, Logger, sleep, UA };
+const DEFAULT_SLEEP_TIME = 5000;
+
+export {
+  DEFAULT_SLEEP_TIME,
+  formatDate,
+  getCookieProperty,
+  getEnv,
+  Logger,
+  sleep,
+  UA,
+};

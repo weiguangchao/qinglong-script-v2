@@ -113,11 +113,10 @@ export {
   CONTENT_TYPE_FORM,
   CONTENT_TYPE_JSON,
   DEFAULT_SLEEP_TIME,
+  DEFAULT_UA,
   formatDate,
   getCookieProperty,
   getEnv,
   Logger,
   sleep,
-  DEFAULT_UA
 };
-

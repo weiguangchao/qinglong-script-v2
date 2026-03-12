@@ -59,12 +59,12 @@ async function checkin(baseURL, cookie) {
       const [baseURL, email, passwd] = config;
 
       const cookie = await login(baseURL, email, passwd);
-      await sleep(1000);
+      await sleep();
 
       await checkin(baseURL, cookie).catch((error) => {
         logger.logAll(error.message);
       });
-      await sleep(1000);
+      await sleep();
     } catch (error) {
       logger.logAll('脚本执行失败, 请到控制台查看日志');
       logger.logAll(error.message);

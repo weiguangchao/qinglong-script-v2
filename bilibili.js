@@ -300,32 +300,32 @@ async function vipPrivilegeMy(cookie) {
       logger.log(`csrf: ${csrf}`);
 
       const { vip_type } = await nav(cookie); // 获取用户信息
-      await sleep(1000);
+      await sleep();
 
       await mangaClockIn(cookie).catch((error) => {
         logger.logAll(error.message);
       }); // 漫画签到
-      await sleep(1000);
+      await sleep();
 
       const tops = await topRcmd(cookie, csrf); // 首页top推荐
-      await sleep(1000);
+      await sleep();
 
       await historyReport(cookie, csrf, tops[0].aid, tops[0].cid); // 观看视频
       logger.logAll(`观看视频: 观看《${tops[0].title}》300秒`);
-      await sleep(1000);
+      await sleep();
 
       await shareAdd(cookie, csrf, tops[0].aid).catch((error) =>
         logger.logAll(error.message),
       ); // 分享视频
       logger.logAll(`分享视频: 分享《${tops[0].title}》`);
-      await sleep(1000);
+      await sleep();
 
       await expLog(cookie); // 获取今日经验信息
-      await sleep(1000);
+      await sleep();
 
       const vipData = await vipPrivilegeMy(cookie); // 获取大会员权益
       logger.log(`大会员权益: 共获取 ${vipData.list.length} 个权益`);
-      await sleep(1000);
+      await sleep();
 
       for (const welfare of vipData.list) {
         // 领取大会员权益
@@ -333,11 +333,11 @@ async function vipPrivilegeMy(cookie) {
           await vipPrivilegeReceive(cookie, csrf, welfare.type).catch((error) =>
             logger.logAll(error.message),
           ); // 领取大会员权益
-          await sleep(1000);
+          await sleep();
         }
       }
 
-      await sleep(1000);
+      await sleep();
     } catch (error) {
       logger.logAll('脚本执行失败, 请到控制台查看日志');
       logger.logAll(error.message);

@@ -2,6 +2,15 @@
  * new Env("工具类")
  * cron: 1 1 1 1 *
  */
+
+////////////////////////////////////////////////////////////
+// 常量
+////////////////////////////////////////////////////////////
+const DEFAULT_SLEEP_TIME = 5000;
+
+const UA =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
+
 class Logger {
   startTime = Date.now();
   notifyMessage = [];
@@ -39,6 +48,9 @@ class Logger {
   }
 }
 
+////////////////////////////////////////////////////////////
+// 工具函数
+////////////////////////////////////////////////////////////
 async function getEnv(envName) {
   if (typeof QLAPI === 'undefined') {
     const env = process.env[envName];
@@ -67,7 +79,7 @@ async function getEnv(envName) {
   return envItems;
 }
 
-async function sleep(ms) {
+async function sleep(ms = DEFAULT_SLEEP_TIME) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -93,11 +105,6 @@ function formatDate(format, date = new Date()) {
     .replace(/ss/g, String(date.getSeconds()).padStart(2, '0'))
     .replace(/SSS/g, String(date.getMilliseconds()).padStart(3, '0'));
 }
-
-const UA =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
-
-const DEFAULT_SLEEP_TIME = 5000;
 
 export {
   DEFAULT_SLEEP_TIME,

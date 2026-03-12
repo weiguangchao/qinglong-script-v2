@@ -7,7 +7,7 @@
  *
  */
 const axios = require('axios');
-const { Logger, getEnv, sleep, DEFAULT_UA } = require('./util.js');
+const { Logger, getEnv, sleep, DEFAULT_UA } = require('./utils.js');
 
 const logger = new Logger('机场签到');
 const envName = 'jc';

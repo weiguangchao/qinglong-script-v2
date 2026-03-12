@@ -22,7 +22,7 @@ const {
   DEFAULT_UA,
   formatDate,
   CONTENT_TYPE_FORM,
-} = require('./util.js');
+} = require('./utils.js');
 
 const logger = new Logger('哔哩哔哩每日任务');
 const envName = 'bilibili';

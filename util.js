@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////
 const DEFAULT_SLEEP_TIME = 3000;
 
-const UA =
+const DEFAULT_UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
 
 const CONTENT_TYPE_JSON = 'application/json';
@@ -118,6 +118,6 @@ export {
   getEnv,
   Logger,
   sleep,
-  UA
+  DEFAULT_UA
 };
 

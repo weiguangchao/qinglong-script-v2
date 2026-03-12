@@ -19,7 +19,7 @@ const {
   getEnv,
   getCookieProperty,
   sleep,
-  UA,
+  DEFAULT_UA,
   formatDate,
   CONTENT_TYPE_FORM,
 } = require('./util.js');
@@ -34,7 +34,7 @@ async function nav(cookie) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );
@@ -71,7 +71,7 @@ async function expLog(cookie) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );
@@ -98,7 +98,7 @@ async function mangaClockIn(cookie) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
         'content-type': CONTENT_TYPE_FORM,
       },
     },
@@ -124,7 +124,7 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );
@@ -147,7 +147,7 @@ async function silver2coin(cookie, csrf) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
         'content-type': CONTENT_TYPE_FORM,
       },
     },
@@ -168,7 +168,7 @@ async function liveStatus(cookie) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );
@@ -196,7 +196,7 @@ async function topRcmd(cookie) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );
@@ -229,7 +229,7 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );
@@ -253,7 +253,7 @@ async function shareAdd(cookie, csrf, aid) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
         'content-type': CONTENT_TYPE_FORM,
       },
     },
@@ -274,7 +274,7 @@ async function vipPrivilegeMy(cookie) {
     {
       headers: {
         cookie,
-        'user-agent': UA,
+        'user-agent': DEFAULT_UA,
       },
     },
   );

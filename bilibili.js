@@ -32,8 +32,8 @@ async function nav(cookie) {
     'https://api.bilibili.com/x/web-interface/nav',
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );
@@ -69,8 +69,8 @@ async function expLog(cookie) {
     'https://api.bilibili.com/x/member/web/exp/log?jsonp=jsonp',
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );
@@ -96,9 +96,9 @@ async function mangaClockIn(cookie) {
     new URLSearchParams({ platform: 'android' }).toString(),
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        cookie,
+        'user-agent': UA,
+        'content-type': 'application/x-www-form-urlencoded',
       },
     },
   );
@@ -122,8 +122,8 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
     }).toString(),
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );
@@ -145,9 +145,9 @@ async function silver2coin(cookie, csrf) {
     }).toString(),
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        cookie,
+        'user-agent': UA,
+        'content-type': 'application/x-www-form-urlencoded',
       },
     },
   );
@@ -166,8 +166,8 @@ async function liveStatus(cookie) {
     'https://api.live.bilibili.com/pay/v1/Exchange/getStatus',
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );
@@ -194,8 +194,8 @@ async function topRcmd(cookie) {
     'https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd',
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );
@@ -227,8 +227,8 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
     }).toString(),
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );
@@ -251,9 +251,9 @@ async function shareAdd(cookie, csrf, aid) {
     }).toString(),
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        cookie,
+        'user-agent': UA,
+        'content-type': 'application/x-www-form-urlencoded',
       },
     },
   );
@@ -272,8 +272,8 @@ async function vipPrivilegeMy(cookie) {
     'https://api.bilibili.com/x/vip/privilege/my',
     {
       headers: {
-        Cookie: cookie,
-        'User-Agent': UA,
+        cookie,
+        'user-agent': UA,
       },
     },
   );

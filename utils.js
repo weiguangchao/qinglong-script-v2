@@ -3,9 +3,8 @@
  * cron: 1 1 1 1 *
  */
 
-////////////////////////////////////////////////////////////
-// 常量
-////////////////////////////////////////////////////////////
+const axios = require('axios');
+
 const DEFAULT_SLEEP_TIME = 3000;
 
 const DEFAULT_UA =
@@ -115,7 +114,6 @@ function formatDate(format, date = new Date()) {
  * @returns {import('axios').AxiosInstance} axios 实例
  */
 function getAxiosInstance(logger) {
-  const axios = require('axios');
   const axiosInstance = axios.create();
 
   // 响应拦截器 - 打印请求响应信息

@@ -189,6 +189,34 @@ async function liveStatus(cookie) {
   return { coin, gold, silver };
 }
 
+// 获取B币券余额
+async function myGoldWallet(cookie) {
+  const url =
+    'https://api.live.bilibili.com/xlive/revenue/v1/wallet/myGoldWallet';
+  const params = new URLSearchParams({
+    need_bp: '1',
+    need_metal: '1',
+    platform: 'pc',
+    bp_with_decimal: '0',
+    ios_bp_afford_party: '0',
+  });
+
+  const response = await axios.get(`${url}?${params.toString()}`, {
+    headers: {
+      cookie,
+      'user-agent': DEFAULT_UA,
+    },
+  });
+
+  const body = response.data;
+  if (body.code !== 0) {
+    throw new Error(`B币券: B币券查询失败! ${body.message}`);
+  }
+
+  logger.log(`B币券: 余额 ${body.data?.new_bp} 个`);
+  return body.data?.new_bp;
+}
+
 // 首页top推荐
 async function topRcmd(cookie) {
   const response = await axios.get(
@@ -299,6 +327,9 @@ async function vipPrivilegeMy(cookie) {
 
       logger.log(`cookie: ${cookie}`);
       logger.log(`csrf: ${csrf}`);
+
+      await myGoldWallet(cookie); // 获取B币券余额
+      await sleep();
 
       const { vip_type } = await nav(cookie); // 获取用户信息
       await sleep();

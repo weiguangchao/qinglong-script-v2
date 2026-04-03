@@ -217,6 +217,71 @@ async function myGoldWallet(cookie) {
   return body.data?.new_bp;
 }
 
+// B币券能否兑换电池
+async function bp2Gold(cookie, bp) {
+  const url = 'https://api.live.bilibili.com/xlive/revenue/v1/wallet/bp2Gold';
+  const params = new URLSearchParams({
+    bp,
+    t: Date.now(),
+  });
+
+  const response = await axios.get(`${url}?${params.toString()}`, {
+    headers: {
+      cookie,
+      'user-agent': DEFAULT_UA,
+    },
+  });
+
+  const body = response.data;
+  if (body.code !== 0) {
+    throw new Error(`B币券: B币转电池可兑换数量查询失败! ${body.message}`);
+  }
+
+  logger.log(`B币券: 可兑换电池数量 ${body.data?.common_bp / 100} 个`);
+  return body.data?.common_bp;
+}
+
+// B币券兑换电池
+async function createOrder(cookie, csrf, bp) {
+  const url = 'https://api.live.bilibili.com/xlive/revenue/v1/wallet/bp2Gold';
+  const params = new URLSearchParams({
+    platform: 'pc',
+    pay_bp: bp,
+    context_id: 213280180,
+    context_type: '1',
+    goods_id: '1',
+    goods_num: '5',
+    goods_type: '2',
+    ios_bp: '0',
+    common_bp: bp,
+    live_statistics: `{"pc_client":"pcWeb","jumpfrom":"-99998","room_category":"0","trackid":"-99998"}`,
+    statistics: `{"platform":0,"pc_client":"pcWeb"}`,
+    csrf_token: csrf,
+    csrf: csrf,
+    visit_id: '',
+  });
+
+  const response = await axios.post(url, params.toString(), {
+    headers: {
+      cookie,
+      'user-agent': DEFAULT_UA,
+      'content-type': CONTENT_TYPE_FORM,
+    },
+  });
+
+  const body = response.data;
+  if (body.code !== 0) {
+    throw new Error(`B币券: B币兑换电池失败! ${body.message}`);
+  }
+
+  if (body?.data?.bp === bp) {
+    logger.log(`B币券: 兑换电池成功! ${bp / 100} 个`);
+    return body.data;
+  }
+
+  throw new Error(`B币券: 兑换电池失败! ${body.message}`);
+}
+
 // 首页top推荐
 async function topRcmd(cookie) {
   const response = await axios.get(
@@ -328,7 +393,8 @@ async function vipPrivilegeMy(cookie) {
       logger.log(`cookie: ${cookie}`);
       logger.log(`csrf: ${csrf}`);
 
-      await myGoldWallet(cookie); // 获取B币券余额
+      await bp2Gold(cookie, 6); // B币券能否兑换电池
+      const bp = await myGoldWallet(cookie); // 获取B币券余额
       await sleep();
 
       const { vip_type } = await nav(cookie); // 获取用户信息

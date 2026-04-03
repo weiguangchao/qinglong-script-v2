@@ -6,14 +6,14 @@
  * ck格式: cookie
  *
  */
-const axios = require('axios');
-const { Logger, getEnv, sleep, DEFAULT_UA } = require('./utils.js');
+const { Logger, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
 
 const logger = new Logger('V2EX签到');
 const envName = 'v2ex';
+const axiosInstance = getAxiosInstance(logger);
 
 async function missionDaily(cookie) {
-  const response = await axios.get('https://www.v2ex.com/mission/daily', {
+  const response = await axiosInstance.get('https://www.v2ex.com/mission/daily', {
     headers: {
       'user-agent': DEFAULT_UA,
       cookie,
@@ -33,7 +33,7 @@ async function missionDaily(cookie) {
 }
 
 async function balance(cookie) {
-  const response = await axios.get('https://www.v2ex.com/balance', {
+  const response = await axiosInstance.get('https://www.v2ex.com/balance', {
     headers: {
       'user-agent': DEFAULT_UA,
       cookie,
@@ -71,7 +71,7 @@ async function balance(cookie) {
 
 async function signIn(cookie, url) {
   const once = url.split('=')[1];
-  const response = await axios.get(`https://www.v2ex.com${url}`, {
+  const response = await axiosInstance.get(`https://www.v2ex.com${url}`, {
     headers: {
       'user-agent': DEFAULT_UA,
       cookie,

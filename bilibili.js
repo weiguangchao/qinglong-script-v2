@@ -13,7 +13,6 @@
  * ck格式: cookie;;;
  *
  */
-const axios = require('axios');
 const {
   Logger,
   getEnv,
@@ -22,14 +21,18 @@ const {
   DEFAULT_UA,
   formatDate,
   CONTENT_TYPE_FORM,
+  getAxiosInstance,
 } = require('./utils.js');
 
 const logger = new Logger('哔哩哔哩每日任务');
 const envName = 'bilibili';
 
+// 创建 axios 实例
+const axiosInstance = getAxiosInstance(logger);
+
 // 获取用户信息
 async function nav(cookie) {
-  const response = await axios.get(
+  const response = await axiosInstance.get(
     'https://api.bilibili.com/x/web-interface/nav',
     {
       headers: {
@@ -66,7 +69,7 @@ async function nav(cookie) {
 
 // 获取今日经验信息
 async function expLog(cookie) {
-  const response = await axios.get(
+  const response = await axiosInstance.get(
     'https://api.bilibili.com/x/member/web/exp/log?jsonp=jsonp',
     {
       headers: {
@@ -92,7 +95,7 @@ async function expLog(cookie) {
 
 // 漫画客户端签到
 async function mangaClockIn(cookie) {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     'https://manga.bilibili.com/twirp/activity.v1.Activity/ClockIn',
     new URLSearchParams({ platform: 'android' }).toString(),
     {
@@ -115,7 +118,7 @@ async function mangaClockIn(cookie) {
 // 领取大会员权益
 // type int 权益类型 1为B币劵 2为优惠券
 async function vipPrivilegeReceive(cookie, csrf, type) {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     'https://api.bilibili.com/x/vip/privilege/receive',
     new URLSearchParams({
       type,
@@ -139,7 +142,7 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
 
 // 银瓜子换硬币
 async function silver2coin(cookie, csrf) {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     'https://api.live.bilibili.com/xlive/revenue/v1/wallet/silver2coin',
     new URLSearchParams({
       csrf,
@@ -163,7 +166,7 @@ async function silver2coin(cookie, csrf) {
 
 // 获取直播金银瓜子状态
 async function liveStatus(cookie) {
-  const response = await axios.get(
+  const response = await axiosInstance.get(
     'https://api.live.bilibili.com/pay/v1/Exchange/getStatus',
     {
       headers: {
@@ -201,7 +204,7 @@ async function myGoldWallet(cookie) {
     ios_bp_afford_party: '0',
   });
 
-  const response = await axios.get(`${url}?${params.toString()}`, {
+  const response = await axiosInstance.get(`${url}?${params.toString()}`, {
     headers: {
       cookie,
       'user-agent': DEFAULT_UA,
@@ -214,7 +217,7 @@ async function myGoldWallet(cookie) {
   }
 
   logger.log(`B币券: 余额 ${body.data?.new_bp} 个`);
-  return body.data?.new_bp;
+  return Number(body.data?.new_bp);
 }
 
 // B币券能否兑换电池
@@ -225,7 +228,7 @@ async function bp2Gold(cookie, bp) {
     t: Date.now(),
   });
 
-  const response = await axios.get(`${url}?${params.toString()}`, {
+  const response = await axiosInstance.get(`${url}?${params.toString()}`, {
     headers: {
       cookie,
       'user-agent': DEFAULT_UA,
@@ -237,13 +240,19 @@ async function bp2Gold(cookie, bp) {
     throw new Error(`B币券: B币转电池可兑换数量查询失败! ${body.message}`);
   }
 
-  logger.log(`B币券: 可兑换电池数量 ${body.data?.common_bp / 100} 个`);
-  return body.data?.common_bp;
+  const commonBp = Number(body.data?.common_bp);
+  const gold = Number(body.data?.gold);
+  if (commonBp === gold && commonBp > 0) {
+    logger.log(`B币券: 可兑换电池数量 ${commonBp / 100} 个`);
+  } else {
+    throw new Error(`B币券: 条件不匹配, common_bp=${commonBp}, gold=${gold}`);
+  }
 }
 
 // B币券兑换电池
 async function createOrder(cookie, csrf, bp) {
-  const url = 'https://api.live.bilibili.com/xlive/revenue/v1/wallet/bp2Gold';
+  const url =
+    'https://api.live.bilibili.com/xlive/revenue/v1/order/createOrder';
   const params = new URLSearchParams({
     platform: 'pc',
     pay_bp: bp,
@@ -261,7 +270,7 @@ async function createOrder(cookie, csrf, bp) {
     visit_id: '',
   });
 
-  const response = await axios.post(url, params.toString(), {
+  const response = await axiosInstance.post(url, params.toString(), {
     headers: {
       cookie,
       'user-agent': DEFAULT_UA,
@@ -274,9 +283,9 @@ async function createOrder(cookie, csrf, bp) {
     throw new Error(`B币券: B币兑换电池失败! ${body.message}`);
   }
 
-  if (body?.data?.bp === bp) {
-    logger.log(`B币券: 兑换电池成功! ${bp / 100} 个`);
-    return body.data;
+  if (Number(body?.data?.bp) === bp) {
+    logger.logAll(`B币券: 兑换电池成功! ${bp / 100} 个`);
+    return;
   }
 
   throw new Error(`B币券: 兑换电池失败! ${body.message}`);
@@ -284,7 +293,7 @@ async function createOrder(cookie, csrf, bp) {
 
 // 首页top推荐
 async function topRcmd(cookie) {
-  const response = await axios.get(
+  const response = await axiosInstance.get(
     'https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd',
     {
       headers: {
@@ -311,7 +320,7 @@ async function topRcmd(cookie) {
 
 // 上报视频进度
 async function historyReport(cookie, csrf, aid, cid, progres = 300) {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     'http://api.bilibili.com/x/v2/history/report',
     new URLSearchParams({
       aid,
@@ -337,7 +346,7 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
 
 // 分享视频
 async function shareAdd(cookie, csrf, aid) {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     'https://api.bilibili.com/x/web-interface/share/add',
     new URLSearchParams({
       aid,
@@ -362,7 +371,7 @@ async function shareAdd(cookie, csrf, aid) {
 
 // 获取大会员权益
 async function vipPrivilegeMy(cookie) {
-  const response = await axios.get(
+  const response = await axiosInstance.get(
     'https://api.bilibili.com/x/vip/privilege/my',
     {
       headers: {
@@ -392,10 +401,6 @@ async function vipPrivilegeMy(cookie) {
 
       logger.log(`cookie: ${cookie}`);
       logger.log(`csrf: ${csrf}`);
-
-      await bp2Gold(cookie, 6); // B币券能否兑换电池
-      const bp = await myGoldWallet(cookie); // 获取B币券余额
-      await sleep();
 
       const { vip_type } = await nav(cookie); // 获取用户信息
       await sleep();
@@ -433,6 +438,15 @@ async function vipPrivilegeMy(cookie) {
           ); // 领取大会员权益
           await sleep();
         }
+      }
+
+      const bp = await myGoldWallet(cookie); // 获取B币券余额
+      if (bp > 0) {
+        await bp2Gold(cookie, bp); // B币券能否兑换电池
+        await sleep();
+
+        await createOrder(cookie, csrf, bp); // B币券兑换电池
+        await sleep();
       }
 
       await sleep();

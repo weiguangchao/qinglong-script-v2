@@ -109,12 +109,35 @@ function formatDate(format, date = new Date()) {
     .replace(/SSS/g, String(date.getMilliseconds()).padStart(3, '0'));
 }
 
-export {
+/**
+ * 创建 axios 实例（配置响应拦截器打印日志）
+ * @param {Logger} logger - Logger 实例
+ * @returns {import('axios').AxiosInstance} axios 实例
+ */
+function getAxiosInstance(logger) {
+  const axios = require('axios');
+  const axiosInstance = axios.create();
+
+  // 响应拦截器 - 打印请求响应信息
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      const url = response.config?.url;
+      logger.log({ url, body: response.data });
+      return response;
+    },
+    (error) => Promise.reject(error),
+  );
+
+  return axiosInstance;
+}
+
+module.exports = {
   CONTENT_TYPE_FORM,
   CONTENT_TYPE_JSON,
   DEFAULT_SLEEP_TIME,
   DEFAULT_UA,
   formatDate,
+  getAxiosInstance,
   getCookieProperty,
   getEnv,
   Logger,

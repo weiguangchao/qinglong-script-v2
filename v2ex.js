@@ -6,19 +6,28 @@
  * ck格式: cookie
  *
  */
-const { App, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
+const {
+  App,
+  getEnv,
+  sleep,
+  DEFAULT_UA,
+  getAxiosInstance,
+} = require('./utils.js');
 
 const app = new App('V2EX签到');
 const envName = 'v2ex';
 const axiosInstance = getAxiosInstance(app);
 
 async function missionDaily(cookie) {
-  const response = await axiosInstance.get('https://www.v2ex.com/mission/daily', {
-    headers: {
-      'user-agent': DEFAULT_UA,
-      cookie,
+  const response = await axiosInstance.get(
+    'https://www.v2ex.com/mission/daily',
+    {
+      headers: {
+        'user-agent': DEFAULT_UA,
+        cookie,
+      },
     },
-  });
+  );
 
   const match = response.data.match(
     /<input type="button" class="super normal button" value=".*?" onclick="location\.href = '(.*?)';" \/>/,

@@ -113,16 +113,40 @@ function formatDate(format, date = new Date()) {
  * @returns {import('axios').AxiosInstance} axios 实例
  */
 function getAxiosInstance(app) {
-  const axiosInstance = axios.create();
+  const axiosInstance = axios.create({
+    maxRedirects: 5,
+    validateStatus: (status) => {
+      return status >= 200 && status < 400;
+    },
+  });
 
   axiosInstance.interceptors.response.use(
     (response) => {
       const url = response.config?.url;
       app.log(`请求 URL: ${url}`);
+      app.log(`响应状态: ${response.status}`);
       app.log(`响应数据: `, response?.data);
       return response;
     },
-    (error) => Promise.reject(error),
+    async (error) => {
+      const { response, config } = error;
+
+      // 处理 302 重定向
+      if (response?.status === 302 && response.headers?.location) {
+        const redirectUrl = response.headers.location;
+        app.log(`检测到 302 重定向: ${redirectUrl}`);
+
+        // 发起新的请求到重定向地址
+        const redirectConfig = {
+          ...config,
+          url: redirectUrl,
+          params: {},
+        };
+        return axiosInstance(redirectConfig);
+      }
+
+      return Promise.reject(error);
+    },
   );
 
   return axiosInstance;

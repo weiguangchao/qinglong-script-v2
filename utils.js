@@ -124,27 +124,10 @@ function getAxiosInstance(app) {
     (response) => {
       const url = response.config?.url;
       app.log(`请求 URL: ${url}`);
-      app.log(`响应状态: ${response.status}`);
       app.log(`响应数据: `, response?.data);
       return response;
     },
     async (error) => {
-      const { response, config } = error;
-
-      // 处理 302 重定向
-      if (response?.status === 302 && response.headers?.location) {
-        const redirectUrl = response.headers.location;
-        app.log(`检测到 302 重定向: ${redirectUrl}`);
-
-        // 发起新的请求到重定向地址
-        const redirectConfig = {
-          ...config,
-          url: redirectUrl,
-          params: {},
-        };
-        return axiosInstance(redirectConfig);
-      }
-
       return Promise.reject(error);
     },
   );

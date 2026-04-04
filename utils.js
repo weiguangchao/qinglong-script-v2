@@ -112,14 +112,14 @@ function formatDate(format, date = new Date()) {
  * @param {App} app - App 实例
  * @returns {import('axios').AxiosInstance} axios 实例
  */
-function getAxiosInstance(logger) {
+function getAxiosInstance(app) {
   const axiosInstance = axios.create();
 
-  // 响应拦截器 - 打印请求响应信息
   axiosInstance.interceptors.response.use(
     (response) => {
       const url = response.config?.url;
-      logger.log(`请求 URL: ${url}`, `响应数据: `, response?.data);
+      app.log(`请求 URL: ${url}`);
+      app.log(`响应数据: `, response?.data);
       return response;
     },
     (error) => Promise.reject(error),

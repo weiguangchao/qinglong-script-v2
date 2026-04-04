@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {},
   "dependencies": {
-    "axios": "^1.13.6"
+    "axios": "^1.13.6",
+    "safe-stable-stringify": "^2.5.0"
   },
   "devDependencies": {
     "prettier": "^3.8.1"

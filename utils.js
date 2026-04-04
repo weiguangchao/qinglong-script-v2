@@ -4,6 +4,7 @@
  */
 
 const axios = require('axios');
+const { stringify } = require('safe-stable-stringify');
 
 const DEFAULT_SLEEP_TIME = 3000;
 
@@ -22,24 +23,25 @@ class Logger {
     this.scriptName = scriptName;
   }
 
-  /**
-   * 默认控制台打印
-   */
-  log(message, options = { console: true, notify: false }) {
-    if (options.console) {
-      console.log(message);
+  log(...args) {
+    if (args?.length === 0) {
+      return '';
     }
-
-    if (options.notify) {
-      this.notifyMessage.push(message);
-    }
+    const msg = args
+      .map((arg) => {
+        if (typeof arg === 'string') {
+          return arg;
+        }
+        return stringify(arg);
+      })
+      .join('\n');
+    console.log(msg);
+    return msg;
   }
 
-  /**
-   * 控制台+通知
-   */
-  logAll(message) {
-    this.log(message, { console: true, notify: true });
+  logAll(...args) {
+    const msg = this.log(...args);
+    this.notifyMessage.push(msg);
   }
 
   notify() {
@@ -50,9 +52,6 @@ class Logger {
   }
 }
 
-////////////////////////////////////////////////////////////
-// 工具函数
-////////////////////////////////////////////////////////////
 async function getEnv(envName) {
   if (typeof QLAPI === 'undefined') {
     const env = process.env[envName];
@@ -120,7 +119,7 @@ function getAxiosInstance(logger) {
   axiosInstance.interceptors.response.use(
     (response) => {
       const url = response.config?.url;
-      logger.log({ url, body: response.data });
+      logger.log(`请求 URL: ${url}`, `响应数据: `, response?.data);
       return response;
     },
     (error) => Promise.reject(error),

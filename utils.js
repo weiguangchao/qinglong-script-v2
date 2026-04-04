@@ -14,7 +14,7 @@ const DEFAULT_UA =
 const CONTENT_TYPE_JSON = 'application/json';
 const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
 
-class Logger {
+class App {
   startTime = Date.now();
   notifyMessage = [];
   scriptName = '';
@@ -109,7 +109,7 @@ function formatDate(format, date = new Date()) {
 
 /**
  * 创建 axios 实例（配置响应拦截器打印日志）
- * @param {Logger} logger - Logger 实例
+ * @param {App} app - App 实例
  * @returns {import('axios').AxiosInstance} axios 实例
  */
 function getAxiosInstance(logger) {
@@ -137,6 +137,6 @@ module.exports = {
   getAxiosInstance,
   getCookieProperty,
   getEnv,
-  Logger,
+  App,
   sleep,
 };

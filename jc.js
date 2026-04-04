@@ -6,14 +6,14 @@
  * ck格式: 机场地址;;;邮箱;;;密码
  *
  */
-const { Logger, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
+const { App, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
 
-const logger = new Logger('机场签到');
+const app = new App('机场签到');
 const envName = 'jc';
-const axiosInstance = getAxiosInstance(logger);
+const axiosInstance = getAxiosInstance(app);
 
 async function login(baseURL, email, passwd) {
-  logger.log(`${baseURL} ${email} 正在登录`);
+  app.log(`${baseURL} ${email} 正在登录`);
   const response = await axiosInstance(`${baseURL}/auth/login`, {
     method: 'POST',
     params: { email, passwd },
@@ -28,12 +28,12 @@ async function login(baseURL, email, passwd) {
   }
 
   const cookie = response.headers['set-cookie'];
-  logger.log(`cookie: ${cookie}`);
+  app.log(`cookie: ${cookie}`);
   return cookie;
 }
 
 async function checkin(baseURL, cookie) {
-  logger.log(`${baseURL} 正在签到`);
+  app.log(`${baseURL} 正在签到`);
   const response = await axiosInstance(`${baseURL}/user/checkin`, {
     method: 'POST',
     headers: {
@@ -47,7 +47,7 @@ async function checkin(baseURL, cookie) {
     throw new Error(`签到: 签到失败! ${data.msg}`);
   }
 
-  logger.logAll(`签到: ${baseURL} 签到成功: ${data.msg}`);
+  app.logAll(`签到: ${baseURL} 签到成功: ${data.msg}`);
 }
 
 !(async () => {
@@ -62,13 +62,13 @@ async function checkin(baseURL, cookie) {
       await sleep();
 
       await checkin(baseURL, cookie).catch((error) => {
-        logger.logAll(error.message);
+        app.logAll(error.message);
       });
       await sleep();
     } catch (error) {
-      logger.logAll('脚本执行失败, 请到控制台查看日志');
-      logger.logAll(error.message);
+      app.logAll('脚本执行失败, 请到控制台查看日志');
+      app.logAll(error.message);
     }
   }
-  logger.notify();
+  app.notify();
 })();

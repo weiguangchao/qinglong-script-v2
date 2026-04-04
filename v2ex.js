@@ -6,11 +6,11 @@
  * ck格式: cookie
  *
  */
-const { Logger, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
+const { App, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
 
-const logger = new Logger('V2EX签到');
+const app = new App('V2EX签到');
 const envName = 'v2ex';
-const axiosInstance = getAxiosInstance(logger);
+const axiosInstance = getAxiosInstance(app);
 
 async function missionDaily(cookie) {
   const response = await axiosInstance.get('https://www.v2ex.com/mission/daily', {
@@ -28,7 +28,7 @@ async function missionDaily(cookie) {
     throw new Error('每日任务: 获取签到 URL 失败!');
   }
 
-  logger.log(`每日任务: 获取签到 URL 成功! ${url}`);
+  app.log(`每日任务: 获取签到 URL 成功! ${url}`);
   return url;
 }
 
@@ -64,9 +64,9 @@ async function balance(cookie) {
     throw new Error('帐号信息: 用户名获取失败!');
   }
 
-  logger.logAll(`帐号信息: ${username}`);
-  logger.logAll(`今日签到: ${today}`);
-  logger.logAll(`帐号余额: ${total}`);
+  app.logAll(`帐号信息: ${username}`);
+  app.logAll(`今日签到: ${today}`);
+  app.logAll(`帐号余额: ${total}`);
 }
 
 async function signIn(cookie, url) {
@@ -82,7 +82,7 @@ async function signIn(cookie, url) {
   });
 
   if (response.data) {
-    logger.log(`今日签到: 签到成功!`);
+    app.log(`今日签到: 签到成功!`);
   } else {
     throw new Error('今日签到: 签到失败!');
   }
@@ -104,15 +104,15 @@ async function signIn(cookie, url) {
         await signIn(cookie, url);
         await sleep();
       } else {
-        logger.logAll(`今日签到: 已签到!`);
+        app.logAll(`今日签到: 已签到!`);
       }
 
       await balance(cookie);
       await sleep();
     } catch (error) {
-      logger.logAll('脚本执行失败, 请到控制台查看日志');
-      logger.logAll(error.message);
+      app.logAll('脚本执行失败, 请到控制台查看日志');
+      app.logAll(error.message);
     }
   }
-  logger.notify();
+  app.notify();
 })();

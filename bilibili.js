@@ -14,7 +14,7 @@
  *
  */
 const {
-  Logger,
+  App,
   getEnv,
   getCookieProperty,
   sleep,
@@ -24,11 +24,11 @@ const {
   getAxiosInstance,
 } = require('./utils.js');
 
-const logger = new Logger('哔哩哔哩每日任务');
+const app = new App('哔哩哔哩每日任务');
 const envName = 'bilibili';
 
 // 创建 axios 实例
-const axiosInstance = getAxiosInstance(logger);
+const axiosInstance = getAxiosInstance(app);
 
 // 获取用户信息
 async function nav(cookie) {
@@ -54,15 +54,15 @@ async function nav(cookie) {
   const vip_type = body.data?.vipType;
   const current_level = body.data?.level_info?.current_level;
   const current_exp = body.data?.level_info?.current_exp;
-  logger.log(
+  app.log(
     `用户: ${uname}, uid: ${uid}, 是否登录: ${is_login}, 硬币: ${coin}, vip类型: ${vip_type}, 当前经验: ${current_exp}`,
   );
 
-  logger.logAll(`用户: ${uname}`);
-  logger.logAll(`大会员状态: ${vip_type === 2 ? '✅' : '❌'}`);
-  logger.logAll(`硬币: ${coin}`);
-  logger.logAll(`当前等级: ${current_level}`);
-  logger.logAll(`当前经验: ${current_exp}`);
+  app.logAll(`用户: ${uname}`);
+  app.logAll(`大会员状态: ${vip_type === 2 ? '✅' : '❌'}`);
+  app.logAll(`硬币: ${coin}`);
+  app.logAll(`当前等级: ${current_level}`);
+  app.logAll(`当前经验: ${current_exp}`);
 
   return { uname, uid, is_login, coin, vip_type, current_exp };
 }
@@ -90,7 +90,7 @@ async function expLog(cookie) {
     .filter((item) => item.time?.startsWith(formatDate('YYYY-MM-DD', d)))
     .reduce((sum, item) => sum + (item.delta ?? 0), 0);
 
-  logger.logAll(`今日经验: ${todayExp}`);
+  app.logAll(`今日经验: ${todayExp}`);
 }
 
 // 漫画客户端签到
@@ -112,7 +112,7 @@ async function mangaClockIn(cookie) {
     throw new Error(`漫画签到: 签到失败! ${body.msg}`);
   }
 
-  logger.logAll(`漫画签到: 签到成功! ${body.msg}`);
+  app.logAll(`漫画签到: 签到成功! ${body.msg}`);
 }
 
 // 领取大会员权益
@@ -137,7 +137,7 @@ async function vipPrivilegeReceive(cookie, csrf, type) {
     throw new Error(`大会员权益: 领取失败! ${body.message}`);
   }
 
-  logger.logAll(`大会员权益: 领取成功! ${body.message}`);
+  app.logAll(`大会员权益: 领取成功! ${body.message}`);
 }
 
 // 银瓜子换硬币
@@ -161,7 +161,7 @@ async function silver2coin(cookie, csrf) {
     throw new Error(`瓜子兑换: 兑换失败! ${body.message}`);
   }
 
-  logger.logAll(`瓜子兑换: 兑换成功! ${body.message}`);
+  app.logAll(`瓜子兑换: 兑换成功! ${body.message}`);
 }
 
 // 获取直播金银瓜子状态
@@ -185,9 +185,9 @@ async function liveStatus(cookie) {
   const gold = body.data?.gold;
   const silver = body.data?.silver;
 
-  logger.logAll(`银瓜子: ${silver}`);
-  logger.logAll(`金瓜子: ${gold}`);
-  logger.logAll(`硬币: ${coin}`);
+  app.logAll(`银瓜子: ${silver}`);
+  app.logAll(`金瓜子: ${gold}`);
+  app.logAll(`硬币: ${coin}`);
 
   return { coin, gold, silver };
 }
@@ -216,7 +216,7 @@ async function myGoldWallet(cookie) {
     throw new Error(`B币券: B币券查询失败! ${body.message}`);
   }
 
-  logger.log(`B币券: 余额 ${body.data?.new_bp} 个`);
+  app.log(`B币券: 余额 ${body.data?.new_bp} 个`);
   return Number(body.data?.new_bp);
 }
 
@@ -243,7 +243,7 @@ async function bp2Gold(cookie, bp) {
   const commonBp = Number(body.data?.common_bp);
   const gold = Number(body.data?.gold);
   if (commonBp === gold && commonBp > 0) {
-    logger.log(`B币券: 可兑换电池数量 ${commonBp / 100} 个`);
+    app.log(`B币券: 可兑换电池数量 ${commonBp / 100} 个`);
   } else {
     throw new Error(`B币券: 条件不匹配, common_bp=${commonBp}, gold=${gold}`);
   }
@@ -284,7 +284,7 @@ async function createOrder(cookie, csrf, bp) {
   }
 
   if (Number(body?.data?.bp) === bp) {
-    logger.logAll(`B币券: 兑换电池成功! ${bp / 100} 个`);
+    app.logAll(`B币券: 兑换电池成功! ${bp / 100} 个`);
     return;
   }
 
@@ -313,7 +313,7 @@ async function topRcmd(cookie) {
     cid: item.cid,
     title: item.title,
   }));
-  logger.log(`首页top推荐: 共获取 ${tops.length} 个视频`);
+  app.log(`首页top推荐: 共获取 ${tops.length} 个视频`);
 
   return tops;
 }
@@ -341,7 +341,7 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
     throw new Error(`视频进度: 上报失败! ${body.message}`);
   }
 
-  logger.log(`视频进度: 上报成功! ${body.message}`);
+  app.log(`视频进度: 上报成功! ${body.message}`);
 }
 
 // 分享视频
@@ -366,7 +366,7 @@ async function shareAdd(cookie, csrf, aid) {
     throw new Error(`分享视频: 分享失败! ${body.message}`);
   }
 
-  logger.log(`分享视频: 分享成功! ${body.message}`);
+  app.log(`分享视频: 分享成功! ${body.message}`);
 }
 
 // 获取大会员权益
@@ -385,7 +385,7 @@ async function vipPrivilegeMy(cookie) {
   if (body.code != 0) {
     throw new Error(`大会员权益: 获取失败! ${body.message}`);
   }
-  logger.log(`大会员权益: 获取成功! ${body.message}`);
+  app.log(`大会员权益: 获取成功! ${body.message}`);
 
   return body.data;
 }
@@ -399,14 +399,14 @@ async function vipPrivilegeMy(cookie) {
       const [cookie] = config;
       const csrf = getCookieProperty(cookie, 'bili_jct');
 
-      logger.log(`cookie: ${cookie}`);
-      logger.log(`csrf: ${csrf}`);
+      app.log(`cookie: ${cookie}`);
+      app.log(`csrf: ${csrf}`);
 
       const { vip_type } = await nav(cookie); // 获取用户信息
       await sleep();
 
       await mangaClockIn(cookie).catch((error) => {
-        logger.logAll(error.message);
+        app.logAll(error.message);
       }); // 漫画签到
       await sleep();
 
@@ -414,27 +414,27 @@ async function vipPrivilegeMy(cookie) {
       await sleep();
 
       await historyReport(cookie, csrf, tops[0].aid, tops[0].cid); // 观看视频
-      logger.logAll(`观看视频: 观看《${tops[0].title}》300秒`);
+      app.logAll(`观看视频: 观看《${tops[0].title}》300秒`);
       await sleep();
 
       await shareAdd(cookie, csrf, tops[0].aid).catch((error) =>
-        logger.logAll(error.message),
+        app.logAll(error.message),
       ); // 分享视频
-      logger.logAll(`分享视频: 分享《${tops[0].title}》`);
+      app.logAll(`分享视频: 分享《${tops[0].title}》`);
       await sleep();
 
       await expLog(cookie); // 获取今日经验信息
       await sleep();
 
       const vipData = await vipPrivilegeMy(cookie); // 获取大会员权益
-      logger.log(`大会员权益: 共获取 ${vipData.list.length} 个权益`);
+      app.log(`大会员权益: 共获取 ${vipData.list.length} 个权益`);
       await sleep();
 
       for (const welfare of vipData.list) {
         // 领取大会员权益
         if (welfare.state === 0 && welfare.vip_type === vip_type) {
           await vipPrivilegeReceive(cookie, csrf, welfare.type).catch((error) =>
-            logger.logAll(error.message),
+            app.logAll(error.message),
           ); // 领取大会员权益
           await sleep();
         }
@@ -451,9 +451,9 @@ async function vipPrivilegeMy(cookie) {
 
       await sleep();
     } catch (error) {
-      logger.logAll('脚本执行失败, 请到控制台查看日志');
-      logger.logAll(error.message);
+      app.logAll('脚本执行失败, 请到控制台查看日志');
+      app.logAll(error.message);
     }
   }
-  logger.notify();
+  app.notify();
 })();

@@ -6,7 +6,7 @@
  * ck格式: 机场地址;;;邮箱;;;密码
  *
  */
-const { App, getEnv, sleep, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
+const { App, getEnv, delay, DEFAULT_UA, getAxiosInstance } = require('./utils.js');
 
 const app = new App('机场签到');
 const envName = 'jc';
@@ -59,12 +59,12 @@ async function checkin(baseURL, cookie) {
       const [baseURL, email, passwd] = config;
 
       const cookie = await login(baseURL, email, passwd);
-      await sleep();
+      await delay();
 
       await checkin(baseURL, cookie).catch((error) => {
         app.logAll(error.message);
       });
-      await sleep();
+      await delay();
     } catch (error) {
       app.logAll('脚本执行失败, 请到控制台查看日志');
       app.logAll(error.message);

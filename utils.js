@@ -80,7 +80,7 @@ async function getEnv(envName) {
   return envItems;
 }
 
-async function sleep(ms = DEFAULT_SLEEP_TIME) {
+async function delay(ms = DEFAULT_SLEEP_TIME) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -91,7 +91,7 @@ async function sleep(ms = DEFAULT_SLEEP_TIME) {
  * @returns {Promise<void>}
  */
 async function randomDelay(min, max) {
-  return sleep(Math.random() * (max - min) + min);
+  return delay(Math.random() * (max - min) + min);
 }
 
 function getCookieProperty(cookie, propertyName) {
@@ -150,11 +150,11 @@ module.exports = {
   CONTENT_TYPE_JSON,
   DEFAULT_SLEEP_TIME,
   DEFAULT_UA,
+  delay,
   formatDate,
   getAxiosInstance,
   getCookieProperty,
   getEnv,
   App,
   randomDelay,
-  sleep,
 };

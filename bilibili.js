@@ -17,7 +17,7 @@ const {
   App,
   getEnv,
   getCookieProperty,
-  sleep,
+  delay,
   DEFAULT_UA,
   formatDate,
   CONTENT_TYPE_FORM,
@@ -403,32 +403,32 @@ async function vipPrivilegeMy(cookie) {
       app.log(`csrf: ${csrf}`);
 
       const { vip_type } = await nav(cookie); // 获取用户信息
-      await sleep();
+      await delay();
 
       await mangaClockIn(cookie).catch((error) => {
         app.logAll(error.message);
       }); // 漫画签到
-      await sleep();
+      await delay();
 
       const tops = await topRcmd(cookie, csrf); // 首页top推荐
-      await sleep();
+      await delay();
 
       await historyReport(cookie, csrf, tops[0].aid, tops[0].cid); // 观看视频
       app.logAll(`观看视频: 观看《${tops[0].title}》300秒`);
-      await sleep();
+      await delay();
 
       await shareAdd(cookie, csrf, tops[0].aid).catch((error) =>
         app.logAll(error.message),
       ); // 分享视频
       app.logAll(`分享视频: 分享《${tops[0].title}》`);
-      await sleep();
+      await delay();
 
       await expLog(cookie); // 获取今日经验信息
-      await sleep();
+      await delay();
 
       const vipData = await vipPrivilegeMy(cookie); // 获取大会员权益
       app.log(`大会员权益: 共获取 ${vipData.list.length} 个权益`);
-      await sleep();
+      await delay();
 
       for (const welfare of vipData.list) {
         // 领取大会员权益
@@ -436,20 +436,20 @@ async function vipPrivilegeMy(cookie) {
           await vipPrivilegeReceive(cookie, csrf, welfare.type).catch((error) =>
             app.logAll(error.message),
           ); // 领取大会员权益
-          await sleep();
+          await delay();
         }
       }
 
       const bp = await myGoldWallet(cookie); // 获取B币券余额
       if (bp > 0) {
         await bp2Gold(cookie, bp); // B币券能否兑换电池
-        await sleep();
+        await delay();
 
         await createOrder(cookie, csrf, bp); // B币券兑换电池
-        await sleep();
+        await delay();
       }
 
-      await sleep();
+      await delay();
     } catch (error) {
       app.logAll('脚本执行失败, 请到控制台查看日志');
       app.logAll(error.message);

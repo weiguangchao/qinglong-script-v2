@@ -9,7 +9,7 @@
 const {
   App,
   getEnv,
-  sleep,
+  delay,
   DEFAULT_UA,
   getAxiosInstance,
 } = require('./utils.js');
@@ -106,18 +106,18 @@ async function signIn(cookie, url) {
       const [cookie] = config;
 
       const url = await missionDaily(cookie);
-      await sleep();
+      await delay();
 
       // 签到
       if (url !== '/balance') {
         await signIn(cookie, url);
-        await sleep();
+        await delay();
       } else {
         app.logAll(`今日签到: 已签到!`);
       }
 
       await balance(cookie);
-      await sleep();
+      await delay();
     } catch (error) {
       app.logAll('脚本执行失败, 请到控制台查看日志');
       app.logAll(error.message);

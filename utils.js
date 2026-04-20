@@ -84,6 +84,16 @@ async function sleep(ms = DEFAULT_SLEEP_TIME) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * 随机延迟
+ * @param {number} min - 最小延迟时间（毫秒）
+ * @param {number} max - 最大延迟时间（毫秒）
+ * @returns {Promise<void>}
+ */
+async function randomDelay(min, max) {
+  return sleep(Math.random() * (max - min) + min);
+}
+
 function getCookieProperty(cookie, propertyName) {
   const match = cookie.match(new RegExp(`${propertyName}=([^;]+)`));
   return match ? match[1] : '';
@@ -145,5 +155,6 @@ module.exports = {
   getCookieProperty,
   getEnv,
   App,
+  randomDelay,
   sleep,
 };

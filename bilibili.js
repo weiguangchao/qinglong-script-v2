@@ -366,7 +366,7 @@ async function shareAdd(cookie, csrf, aid) {
     throw new Error(`分享视频: 分享失败! ${body.message}`);
   }
 
-  app.log(`分享视频: 分享成功! ${body.message}`);
+  app.logAll(`分享视频: 分享《${tops[0].title}》`);
 }
 
 // 获取大会员权益
@@ -420,7 +420,6 @@ async function vipPrivilegeMy(cookie) {
       await shareAdd(cookie, csrf, tops[0].aid).catch((error) =>
         app.logAll(error.message),
       ); // 分享视频
-      app.logAll(`分享视频: 分享《${tops[0].title}》`);
       await delay();
 
       await expLog(cookie); // 获取今日经验信息

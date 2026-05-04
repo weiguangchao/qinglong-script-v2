@@ -256,12 +256,12 @@ async function createOrder(cookie, csrf, bp) {
   const params = new URLSearchParams({
     platform: 'pc',
     pay_bp: bp,
-    context_id: 213280180,
-    context_type: '1',
-    goods_id: '1',
-    goods_num: '5',
-    goods_type: '2',
-    ios_bp: '0',
+    context_id: 213280180, // 戒社直播间
+    context_type: 1,
+    goods_id: 1,
+    goods_num: 5,
+    goods_type: 2,
+    ios_bp: 0,
     common_bp: bp,
     live_statistics: `{"pc_client":"pcWeb","jumpfrom":"-99998","room_category":"0","trackid":"-99998"}`,
     statistics: `{"platform":0,"pc_client":"pcWeb"}`,

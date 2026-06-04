@@ -247,6 +247,7 @@ async function bp2Gold(cookie, bp) {
   } else {
     throw new Error(`B币券: 条件不匹配, common_bp=${commonBp}, gold=${gold}`);
   }
+  return commonBp;
 }
 
 // B币券兑换电池
@@ -259,7 +260,7 @@ async function createOrder(cookie, csrf, bp) {
     context_id: 213280180, // 戒社直播间
     context_type: 1,
     goods_id: 1,
-    goods_num: 5,
+    goods_num: Math.floor(bp / 100),
     goods_type: 2,
     ios_bp: 0,
     common_bp: bp,
@@ -275,6 +276,8 @@ async function createOrder(cookie, csrf, bp) {
       cookie,
       'user-agent': DEFAULT_UA,
       'content-type': CONTENT_TYPE_FORM,
+      referer: `https://live.bilibili.com/${213280180}`,
+      origin: 'https://live.bilibili.com',
     },
   });
 
@@ -441,10 +444,10 @@ async function vipPrivilegeMy(cookie) {
 
       const bp = await myGoldWallet(cookie); // 获取B币券余额
       if (bp > 0) {
-        await bp2Gold(cookie, bp); // B币券能否兑换电池
+        const commonBp = await bp2Gold(cookie, bp); // B币券能否兑换电池（返回金瓜子单位）
         await delay();
 
-        await createOrder(cookie, csrf, bp); // B币券兑换电池
+        await createOrder(cookie, csrf, commonBp); // B币券兑换电池
         await delay();
       }
 

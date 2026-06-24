@@ -348,7 +348,7 @@ async function historyReport(cookie, csrf, aid, cid, progres = 300) {
 }
 
 // 分享视频
-async function shareAdd(cookie, csrf, aid) {
+async function shareAdd(cookie, csrf, aid, title) {
   const response = await axiosInstance.post(
     'https://api.bilibili.com/x/web-interface/share/add',
     new URLSearchParams({
@@ -369,7 +369,7 @@ async function shareAdd(cookie, csrf, aid) {
     throw new Error(`分享视频: 分享失败! ${body.message}`);
   }
 
-  app.logAll(`分享视频: 分享《${tops[0].title}》`);
+  app.logAll(`分享视频: 分享《${title}》`);
 }
 
 // 获取大会员权益
@@ -420,7 +420,7 @@ async function vipPrivilegeMy(cookie) {
       app.logAll(`观看视频: 观看《${tops[0].title}》300秒`);
       await delay();
 
-      await shareAdd(cookie, csrf, tops[0].aid).catch((error) =>
+      await shareAdd(cookie, csrf, tops[0].aid, tops[0].title).catch((error) =>
         app.logAll(error.message),
       ); // 分享视频
       await delay();

@@ -286,7 +286,9 @@ async function createOrder(cookie, csrf, bp) {
     throw new Error(`B币券: B币兑换电池失败! ${body.message}`);
   }
 
-  if (Number(body?.data?.bp) === bp) {
+  // 下单成功后接口返回的 data.bp 是剩余 B币券余额(已消耗为 0)，不是本次支付金额，
+  // 因此不能用它来判定成功，应以存在有效订单号为准。
+  if (body?.data?.order_id) {
     app.logAll(`B币券: 兑换电池成功! ${bp / 100} 个`);
     return;
   }
